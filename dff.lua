@@ -1324,6 +1324,26 @@ local Library = (function()
     pickerStroke.Thickness = 1
     pickerStroke.Parent = picker
 
+    -- [إضافة] زر تشغيل وإطفاء الـ Rainbow
+    local RainbowToggle = Instance.new("TextButton")
+    local RainbowToggleCorner = Instance.new("UICorner")
+    local RainbowToggleStroke = Instance.new("UIStroke")
+    
+    RainbowToggle.Parent = TextButton
+    RainbowToggle.Size = UDim2.new(0, 60, 0, 20)
+    RainbowToggle.Position = UDim2.new(1, -70, 0, 2.5)
+    RainbowToggle.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    RainbowToggle.Font = Enum.Font.GothamBold
+    RainbowToggle.Text = "Rainbow"
+    RainbowToggle.TextColor3 = Color3.fromRGB(150, 150, 150)
+    RainbowToggle.TextSize = 10
+    RainbowToggle.ZIndex = 5
+
+    RainbowToggleCorner.CornerRadius = UDim.new(0, 4)
+    RainbowToggleCorner.Parent = RainbowToggle
+    RainbowToggleStroke.Color = Color3.fromRGB(50, 50, 50)
+    RainbowToggleStroke.Parent = RainbowToggle
+
     local UI_Grade = Instance.new("ImageButton")
     local UI_GradeCorner = Instance.new("UICorner")
     local UI_GradeStroke = Instance.new("UIStroke")
@@ -1423,102 +1443,107 @@ local Library = (function()
     Select2Stroke.Thickness = 1.5
     Select2Stroke.Parent = Select2
 
-    local RainbowActive = false
-    local RainbowThread = nil
-
     local function callback()
         pcall(Callback, Color3.fromHSV(ColorH, ColorS, ColorV))
     end
 
     local function updcolorpicker()
-        local h = math.clamp(Select1.Position.Y.Offset / 95, 0, 1)
-        local s = math.clamp(Select2.Position.X.Offset / UI_Grade.AbsoluteSize.X, 0, 1)
-        local v = math.clamp(1 - (Select2.Position.Y.Offset / 95), 0, 1)
-        
-        ColorH = h
-        ColorS = s
-        ColorV = v
+        ColorH = math.clamp(Select1.Position.Y.Offset / 95, 0, 1)
+        ColorS = math.clamp(Select2.Position.X.Offset / UI_Grade.AbsoluteSize.X, 0, 1)
+        ColorV = math.clamp(1 - (Select2.Position.Y.Offset / 95), 0, 1)
         
         UI_Grade.ImageColor3 = Color3.fromHSV(ColorH, 1, 1)
         picker.BackgroundColor3 = Color3.fromHSV(ColorH, ColorS, ColorV)
         callback()
     end
 
-    local function RainbowLoop()
-        while RainbowActive do
-            ColorH = (ColorH + 0.005) % 1
-            Select1.Position = UDim2.new(0, 0, 0, ColorH * 95)
-            updcolorpicker()
-            task.wait(0.02)
-        end
-    end
+    -- [إضافة] منطق الـ Rainbow الذكي والتحديث التلقائي
+    local IsRainbow = false
+    local RainbowConnection = nil
 
-    local ToggleBtn = Instance.new("TextButton")
-    ToggleBtn.Parent = TextButton
-    ToggleBtn.Size = UDim2.new(0, 18, 0, 18)
-    ToggleBtn.Position = UDim2.new(1, -20, 0.5, -9)
-    ToggleBtn.BackgroundColor3 = Color_Main
-    ToggleBtn.BorderSizePixel = 0
-    ToggleBtn.Text = ""
-    ToggleBtn.AutoButtonColor = false
-    ToggleBtn.Visible = false
-
-    local ToggleCorner = Instance.new("UICorner")
-    ToggleCorner.CornerRadius = UDim.new(0, 3)
-    ToggleCorner.Parent = ToggleBtn
-
-    local ToggleStroke = Instance.new("UIStroke")
-    ToggleStroke.Parent = ToggleBtn
-    ToggleStroke.Thickness = 1
-    ToggleStroke.Color = Color_Border
-
-    local Check = Instance.new("Frame")
-    Check.Parent = ToggleBtn
-    Check.Size = UDim2.new(0, 0, 0, 0)
-    Check.Position = UDim2.new(0.5, -5, 0.5, -5)
-    Check.BackgroundColor3 = Color_Accent
-    Check.BorderSizePixel = 0
-
-    local CheckCorner = Instance.new("UICorner")
-    CheckCorner.CornerRadius = UDim.new(0, 2)
-    CheckCorner.Parent = Check
-
-    local function ToggleRainbow()
-        RainbowActive = not RainbowActive
-        if RainbowActive then
-            Check.Size = UDim2.new(0, 10, 0, 10)
-            ToggleBtn.BackgroundColor3 = Color_Accent
-            if RainbowThread then
-                task.cancel(RainbowThread)
-                RainbowThread = nil
-            end
-            RainbowThread = task.spawn(RainbowLoop)
+    local function ToggleRainbow(State)
+        IsRainbow = State
+        if IsRainbow then
+            RainbowToggle.TextColor3 = Color3.fromRGB(255, 0, 0)
+            RainbowToggleStroke.Color = Color3.fromRGB(255, 0, 0)
+            
+            RainbowConnection = game:GetService("RunService").RenderStepped:Connect(function()
+                local Hue = (tick() % 5) / 5 -- يكمل الدورة كل 5 ثوانٍ
+                picker.BackgroundColor3 = Color3.fromHSV(Hue, 1, 1)
+                pcall(Callback, picker.BackgroundColor3)
+                
+                -- تحديث مواقع المؤشرات لتلاحق اللون تلقائياً
+                Select1.Position = UDim2.new(0, 0, 0, Hue * 95)
+                UI_Grade.ImageColor3 = Color3.fromHSV(Hue, 1, 1)
+            end)
         else
-            Check.Size = UDim2.new(0, 0, 0, 0)
-            ToggleBtn.BackgroundColor3 = Color_Main
-            if RainbowThread then
-                task.cancel(RainbowThread)
-                RainbowThread = nil
+            RainbowToggle.TextColor3 = Color3.fromRGB(150, 150, 150)
+            RainbowToggleStroke.Color = Color3.fromRGB(50, 50, 50)
+            if RainbowConnection then
+                RainbowConnection:Disconnect()
+                RainbowConnection = nil
             end
+            updcolorpicker()
         end
     end
 
-    ToggleBtn.MouseButton1Click:Connect(ToggleRainbow)
+    RainbowToggle.MouseButton1Click:Connect(function()
+        ToggleRainbow(not IsRainbow)
+    end)
+
+    UI_Grade.MouseButton1Click:Connect(function()
+        ToggleRainbow(false) -- إطفاء الريمبو إذا تم التعديل يدوياً
+        local mouse = UserInputService:GetMouseLocation()
+        local savepos = UI_Grade.AbsolutePosition
+        local newX = math.clamp(mouse.X - savepos.X, 0, UI_Grade.AbsoluteSize.X)
+        local newY = math.clamp(mouse.Y - savepos.Y - 36, 0, 95)
+        TweenService:Create(Select2, TweenInfo.new(0.2), {Position = UDim2.new(0, newX, 0, newY)}):Play()
+        task.wait(0.05)
+        updcolorpicker()
+    end)
+
+    grade.MouseButton1Click:Connect(function()
+        ToggleRainbow(false) -- إطفاء الريمبو عند تغيير الـ Hue يدوياً
+        local mouse = UserInputService:GetMouseLocation().Y - 36
+        local savepos = grade.AbsolutePosition.Y
+        local newY = math.clamp(mouse - savepos, 0, 95)
+        TweenService:Create(Select1, TweenInfo.new(0.2), {Position = UDim2.new(0, 0, 0, newY)}):Play()
+        task.wait(0.05)
+        updcolorpicker()
+    end)
+
+    Select1.Changed:Connect(function(prop)
+        if prop == "Position" then
+            Select1.Position = UDim2.new(0, 0, 0, math.clamp(Select1.Position.Y.Offset, 0, 95))
+            if not IsRainbow then
+                updcolorpicker()
+            end
+        end
+    end)
+
+    Select2.Changed:Connect(function(prop)
+        if prop == "Position" then
+            Select2.Position = UDim2.new(0, math.clamp(Select2.Position.X.Offset, 0, 222), 0, math.clamp(Select2.Position.Y.Offset, 0, 95))
+            if not IsRainbow then
+                updcolorpicker()
+            end
+        end
+    end)
 
     TextButton.Changed:Connect(function(prop)
         if prop == "Size" then
             if TextButton.Size.Y.Offset >= 60 then
                 picker.Position = UDim2.new(0, 5, 0, 5)
+                RainbowToggle.Position = UDim2.new(1, -70, 0, 5)
                 UI_Grade.Visible = true
                 A_1.Visible = true
                 grade.Visible = true
-                ToggleBtn.Visible = true
             else
                 picker.Position = UDim2.new(0, 5, 0, 2.5)
+                RainbowToggle.Position = UDim2.new(1, -70, 0, 2.5)
                 UI_Grade.Visible = false
                 A_1.Visible = false
                 grade.Visible = false
-                ToggleBtn.Visible = false
             end
         end
     end)
@@ -1536,6 +1561,7 @@ local Library = (function()
     updcolorpicker()
     return picker
 end
+
 
             return Elements
         end
