@@ -1266,7 +1266,7 @@ local Library = (function()
                 return Lab
             end
 
-            function Elements:ColorPicker(Configs)
+    function Elements:ColorPicker(Configs)
     local name = Configs.Title or "Color Picker"
     local Default = Configs.Default or Color3.fromRGB(255, 0, 0)
     local Callback = Configs.Callback or function() end
@@ -1431,9 +1431,13 @@ local Library = (function()
     end
 
     local function updcolorpicker()
-        ColorH = math.clamp(Select1.Position.Y.Offset / 95, 0, 1)
-        ColorS = math.clamp(Select2.Position.X.Offset / UI_Grade.AbsoluteSize.X, 0, 1)
-        ColorV = math.clamp(1 - (Select2.Position.Y.Offset / 95), 0, 1)
+        local h = math.clamp(Select1.Position.Y.Offset / 95, 0, 1)
+        local s = math.clamp(Select2.Position.X.Offset / UI_Grade.AbsoluteSize.X, 0, 1)
+        local v = math.clamp(1 - (Select2.Position.Y.Offset / 95), 0, 1)
+        
+        ColorH = h
+        ColorS = s
+        ColorV = v
         
         UI_Grade.ImageColor3 = Color3.fromHSV(ColorH, 1, 1)
         picker.BackgroundColor3 = Color3.fromHSV(ColorH, ColorS, ColorV)
