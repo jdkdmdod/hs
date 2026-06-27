@@ -694,14 +694,14 @@ local Library = (function()
 
             local Elements = {}
             
-            function Elements:Button(text, callback, Configs)
+    function Elements:Button(text, callback, Configs)
     local Button = Instance.new("TextButton")
     local BtnCorner = Instance.new("UICorner")
     local BtnStroke = Instance.new("UIStroke")
     local BtnIcon = Instance.new("ImageLabel")
     local BtnText = Instance.new("TextLabel")
     local ViewInfo = nil
-    
+
     Button.Parent = Page
     Button.BackgroundColor3 = Color_Sec
     Button.Size = UDim2.new(1, 0, 0, 32)
@@ -742,12 +742,12 @@ local Library = (function()
         ViewInfo.Image = "rbxassetid://3926305904"
         ViewInfo.ImageColor3 = Color_TextDim
         ViewInfo.AutoButtonColor = false
-        
+
         local InfoFrame = Instance.new("Frame")
         local InfoCorner = Instance.new("UICorner")
         local InfoStroke = Instance.new("UIStroke")
         local InfoText = Instance.new("TextLabel")
-        
+
         InfoFrame.Parent = Button
         InfoFrame.Size = UDim2.new(0, 200, 0, 0)
         InfoFrame.Position = UDim2.new(1, -210, 0, -5)
@@ -756,14 +756,14 @@ local Library = (function()
         InfoFrame.Visible = false
         InfoFrame.ClipsDescendants = true
         InfoFrame.ZIndex = 10
-        
+
         InfoCorner.CornerRadius = UDim.new(0, 6)
         InfoCorner.Parent = InfoFrame
-        
+
         InfoStroke.Parent = InfoFrame
         InfoStroke.Thickness = 1
         InfoStroke.Color = Color_Border
-        
+
         InfoText.Parent = InfoFrame
         InfoText.Size = UDim2.new(1, -10, 0, 0)
         InfoText.Position = UDim2.new(0, 5, 0, 5)
@@ -775,17 +775,17 @@ local Library = (function()
         InfoText.TextWrapped = true
         InfoText.TextYAlignment = Enum.TextYAlignment.Top
         InfoText.AutomaticSize = Enum.AutomaticSize.Y
-        
+
         local infoOpen = false
-        
+
         ViewInfo.MouseEnter:Connect(function()
             TweenService:Create(ViewInfo, TweenInfo.new(0.2), {ImageColor3 = Color_Accent}):Play()
         end)
-        
+
         ViewInfo.MouseLeave:Connect(function()
             TweenService:Create(ViewInfo, TweenInfo.new(0.2), {ImageColor3 = Color_TextDim}):Play()
         end)
-        
+
         ViewInfo.MouseButton1Click:Connect(function()
             infoOpen = not infoOpen
             if infoOpen then
@@ -797,7 +797,7 @@ local Library = (function()
                 InfoFrame.Visible = false
             end
         end)
-        
+
         Button.MouseLeave:Connect(function()
             if infoOpen then
                 infoOpen = false
