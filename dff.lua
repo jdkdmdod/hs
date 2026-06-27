@@ -1324,10 +1324,9 @@ local Library = (function()
     pickerStroke.Thickness = 1
     pickerStroke.Parent = picker
 
-    -- [إضافة] زر تشغيل وإطفاء الـ Rainbow
+    -- [تعديل] زر الـ Rainbow بدون أي UIStroke
     local RainbowToggle = Instance.new("TextButton")
     local RainbowToggleCorner = Instance.new("UICorner")
-    local RainbowToggleStroke = Instance.new("UIStroke")
     
     RainbowToggle.Parent = TextButton
     RainbowToggle.Size = UDim2.new(0, 60, 0, 20)
@@ -1341,8 +1340,6 @@ local Library = (function()
 
     RainbowToggleCorner.CornerRadius = UDim.new(0, 4)
     RainbowToggleCorner.Parent = RainbowToggle
-    RainbowToggleStroke.Color = Color3.fromRGB(50, 50, 50)
-    RainbowToggleStroke.Parent = RainbowToggle
 
     local UI_Grade = Instance.new("ImageButton")
     local UI_GradeCorner = Instance.new("UICorner")
@@ -1457,28 +1454,25 @@ local Library = (function()
         callback()
     end
 
-    -- [إضافة] منطق الـ Rainbow الذكي والتحديث التلقائي
     local IsRainbow = false
     local RainbowConnection = nil
 
+    -- [تعديل] تحديث الألوان عند التفعيل والإيقاف دون استدعاء Stroke
     local function ToggleRainbow(State)
         IsRainbow = State
         if IsRainbow then
             RainbowToggle.TextColor3 = Color3.fromRGB(255, 0, 0)
-            RainbowToggleStroke.Color = Color3.fromRGB(255, 0, 0)
             
             RainbowConnection = game:GetService("RunService").RenderStepped:Connect(function()
-                local Hue = (tick() % 5) / 5 -- يكمل الدورة كل 5 ثوانٍ
+                local Hue = (tick() % 5) / 5
                 picker.BackgroundColor3 = Color3.fromHSV(Hue, 1, 1)
                 pcall(Callback, picker.BackgroundColor3)
                 
-                -- تحديث مواقع المؤشرات لتلاحق اللون تلقائياً
                 Select1.Position = UDim2.new(0, 0, 0, Hue * 95)
                 UI_Grade.ImageColor3 = Color3.fromHSV(Hue, 1, 1)
             end)
         else
             RainbowToggle.TextColor3 = Color3.fromRGB(150, 150, 150)
-            RainbowToggleStroke.Color = Color3.fromRGB(50, 50, 50)
             if RainbowConnection then
                 RainbowConnection:Disconnect()
                 RainbowConnection = nil
@@ -1492,7 +1486,7 @@ local Library = (function()
     end)
 
     UI_Grade.MouseButton1Click:Connect(function()
-        ToggleRainbow(false) -- إطفاء الريمبو إذا تم التعديل يدوياً
+        ToggleRainbow(false)
         local mouse = UserInputService:GetMouseLocation()
         local savepos = UI_Grade.AbsolutePosition
         local newX = math.clamp(mouse.X - savepos.X, 0, UI_Grade.AbsoluteSize.X)
@@ -1503,7 +1497,7 @@ local Library = (function()
     end)
 
     grade.MouseButton1Click:Connect(function()
-        ToggleRainbow(false) -- إطفاء الريمبو عند تغيير الـ Hue يدوياً
+        ToggleRainbow(false)
         local mouse = UserInputService:GetMouseLocation().Y - 36
         local savepos = grade.AbsolutePosition.Y
         local newY = math.clamp(mouse - savepos, 0, 95)
@@ -1561,6 +1555,7 @@ local Library = (function()
     updcolorpicker()
     return picker
 end
+
 
 
             return Elements
