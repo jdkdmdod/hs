@@ -694,146 +694,162 @@ local Library = (function()
 
             local Elements = {}
             
-            function Elements:Button(text, callback)
-                local Button = Instance.new("TextButton")
-                local BtnCorner = Instance.new("UICorner")
-                local BtnStroke = Instance.new("UIStroke")
-                local BtnIcon = Instance.new("ImageLabel")
-                local BtnText = Instance.new("TextLabel")
-                
-                Button.Parent = Page
-                Button.BackgroundColor3 = Color_Sec
-                Button.Size = UDim2.new(1, 0, 0, 32)
-                Button.Text = ""
-                Button.AutoButtonColor = false
+            function Elements:Button(Configs, callback)
+    local text = type(Configs) == "table" and Configs.Title or Configs
+    local infoText = type(Configs) == "table" and Configs.Info or nil
+    local callback = type(Configs) == "table" and Configs.Callback or callback
 
-                BtnText.Parent = Button
-                BtnText.BackgroundTransparency = 1
-                BtnText.Position = UDim2.new(0, 10, 0.5, -9)
-                BtnText.Size = UDim2.new(1, 0, 0, 18)
-                BtnText.Font = Enum.Font.Gotham
-                BtnText.Text = text
-                BtnText.TextColor3 = Color_Text
-                BtnText.TextSize = 13
-                BtnText.TextXAlignment = Enum.TextXAlignment.Left
+    local Button = Instance.new("TextButton")
+    local BtnCorner = Instance.new("UICorner")
+    local BtnStroke = Instance.new("UIStroke")
+    local BtnIcon = Instance.new("ImageLabel")
+    local BtnText = Instance.new("TextLabel")
+    
+    Button.Parent = Page
+    Button.BackgroundColor3 = Color_Sec
+    Button.Size = UDim2.new(1, 0, 0, 32)
+    Button.Text = ""
+    Button.AutoButtonColor = false
 
-                BtnIcon.Parent = Button
-                BtnIcon.BackgroundTransparency = 1
-                BtnIcon.Position = UDim2.new(1, -28, 0.5, -9)
-                BtnIcon.Size = UDim2.new(0, 18, 0, 18)
-                BtnIcon.Image = "rbxassetid://7734010488"
-                BtnIcon.ImageColor3 = Color_Text
+    BtnText.Parent = Button
+    BtnText.BackgroundTransparency = 1
+    BtnText.Position = UDim2.new(0, 10, 0.5, -9)
+    BtnText.Size = UDim2.new(1, 0, 0, 18)
+    BtnText.Font = Enum.Font.Gotham
+    BtnText.Text = text
+    BtnText.TextColor3 = Color_Text
+    BtnText.TextSize = 13
+    BtnText.TextXAlignment = Enum.TextXAlignment.Left
 
-                BtnCorner.CornerRadius = UDim.new(0, 6)
-                BtnCorner.Parent = Button
+    BtnIcon.Parent = Button
+    BtnIcon.BackgroundTransparency = 1
+    BtnIcon.Position = UDim2.new(1, -28, 0.5, -9)
+    BtnIcon.Size = UDim2.new(0, 18, 0, 18)
+    BtnIcon.Image = "rbxassetid://7734010488"
+    BtnIcon.ImageColor3 = Color_Text
 
-                BtnStroke.Parent = Button
-                BtnStroke.Thickness = 1
-                BtnStroke.Color = Color_Sec
-                BtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    BtnCorner.CornerRadius = UDim.new(0, 6)
+    BtnCorner.Parent = Button
 
-                Button.MouseEnter:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(35,35,35)}):Play()
-                    TweenService:Create(BtnStroke, TweenInfo.new(0.2), {Color = Color_Accent}):Play()
-                    TweenService:Create(BtnIcon, TweenInfo.new(0.2), {ImageColor3 = Color_Accent}):Play()
-                    TweenService:Create(BtnText, TweenInfo.new(0.2), {TextColor3 = Color_Accent}):Play()
-                end)
+    BtnStroke.Parent = Button
+    BtnStroke.Thickness = 1
+    BtnStroke.Color = Color_Sec
+    BtnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-                Button.MouseLeave:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color_Sec}):Play()
-                    TweenService:Create(BtnStroke, TweenInfo.new(0.2), {Color = Color_Sec}):Play()
-                    TweenService:Create(BtnIcon, TweenInfo.new(0.2), {ImageColor3 = Color_Text}):Play()
-                    TweenService:Create(BtnText, TweenInfo.new(0.2), {TextColor3 = Color_Text}):Play()
-                end)
+    Button.MouseEnter:Connect(function()
+        TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(35,35,35)}):Play()
+        TweenService:Create(BtnStroke, TweenInfo.new(0.2), {Color = Color_Accent}):Play()
+        TweenService:Create(BtnIcon, TweenInfo.new(0.2), {ImageColor3 = Color_Accent}):Play()
+        TweenService:Create(BtnText, TweenInfo.new(0.2), {TextColor3 = Color_Accent}):Play()
+    end)
 
-                Button.MouseButton1Click:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.1), {BackgroundColor3 = Color_Accent}):Play()
-                    TweenService:Create(BtnText, TweenInfo.new(0.1), {TextColor3 = Color_Main}):Play()
-                    TweenService:Create(BtnIcon, TweenInfo.new(0.1), {ImageColor3 = Color_Main}):Play()
-                    task.wait(0.1)
-                    TweenService:Create(Button, TweenInfo.new(0.3), {BackgroundColor3 = Color_Sec}):Play()
-                    TweenService:Create(BtnText, TweenInfo.new(0.3), {TextColor3 = Color_Text}):Play()
-                    TweenService:Create(BtnIcon, TweenInfo.new(0.3), {ImageColor3 = Color_Text}):Play()
-                    pcall(callback)
-                end)
-            end
-            
-            function Elements:Toggle(text, default, callback)
-                local ToggleFrame = Instance.new("TextButton")
-                local TogCorner = Instance.new("UICorner")
-                local TogTitle = Instance.new("TextLabel")
-                local TogBox = Instance.new("Frame")
-                local TogBoxCorner = Instance.new("UICorner")
-                local TogBoxStroke = Instance.new("UIStroke")
-                local Check = Instance.new("Frame")
-                local CheckCorner = Instance.new("UICorner")
+    Button.MouseLeave:Connect(function()
+        TweenService:Create(Button, TweenInfo.new(0.2), {BackgroundColor3 = Color_Sec}):Play()
+        TweenService:Create(BtnStroke, TweenInfo.new(0.2), {Color = Color_Sec}):Play()
+        TweenService:Create(BtnIcon, TweenInfo.new(0.2), {ImageColor3 = Color_Text}):Play()
+        TweenService:Create(BtnText, TweenInfo.new(0.2), {TextColor3 = Color_Text}):Play()
+    end)
 
-                local toggled = default or false
+    Button.MouseButton1Click:Connect(function()
+        TweenService:Create(Button, TweenInfo.new(0.1), {BackgroundColor3 = Color_Accent}):Play()
+        TweenService:Create(BtnText, TweenInfo.new(0.1), {TextColor3 = Color_Main}):Play()
+        TweenService:Create(BtnIcon, TweenInfo.new(0.1), {ImageColor3 = Color_Main}):Play()
+        task.wait(0.1)
+        TweenService:Create(Button, TweenInfo.new(0.3), {BackgroundColor3 = Color_Sec}):Play()
+        TweenService:Create(BtnText, TweenInfo.new(0.3), {TextColor3 = Color_Text}):Play()
+        TweenService:Create(BtnIcon, TweenInfo.new(0.3), {ImageColor3 = Color_Text}):Play()
+        pcall(callback)
+    end)
 
-                ToggleFrame.Parent = Page
-                ToggleFrame.BackgroundColor3 = Color_Sec
-                ToggleFrame.Size = UDim2.new(1, 0, 0, 32)
-                ToggleFrame.AutoButtonColor = false
-                ToggleFrame.Text = ""
+    if infoText then
+        Elements:Tooltip(Button, infoText)
+    end
+end
 
-                TogCorner.CornerRadius = UDim.new(0, 6)
-                TogCorner.Parent = ToggleFrame
+function Elements:Toggle(Configs, default, callback)
+    local text = type(Configs) == "table" and Configs.Title or Configs
+    local infoText = type(Configs) == "table" and Configs.Info or nil
+    local toggled = type(Configs) == "table" and Configs.Default or (default or false)
+    local callback = type(Configs) == "table" and Configs.Callback or callback
 
-                TogTitle.Parent = ToggleFrame
-                TogTitle.BackgroundTransparency = 1
-                TogTitle.Position = UDim2.new(0, 10, 0, 0)
-                TogTitle.Size = UDim2.new(1, -40, 1, 0)
-                TogTitle.Font = Enum.Font.Gotham
-                TogTitle.Text = text
-                TogTitle.TextColor3 = Color_Text
-                TogTitle.TextSize = 13
-                TogTitle.TextXAlignment = Enum.TextXAlignment.Left
+    local ToggleFrame = Instance.new("TextButton")
+    local TogCorner = Instance.new("UICorner")
+    local TogTitle = Instance.new("TextLabel")
+    local TogBox = Instance.new("Frame")
+    local TogBoxCorner = Instance.new("UICorner")
+    local TogBoxStroke = Instance.new("UIStroke")
+    local Check = Instance.new("Frame")
+    local CheckCorner = Instance.new("UICorner")
 
-                TogBox.Parent = ToggleFrame
-                TogBox.BackgroundColor3 = Color_Main
-                TogBox.Position = UDim2.new(1, -26, 0.5, -9)
-                TogBox.Size = UDim2.new(0, 18, 0, 18)
+    ToggleFrame.Parent = Page
+    ToggleFrame.BackgroundColor3 = Color_Sec
+    ToggleFrame.Size = UDim2.new(1, 0, 0, 32)
+    ToggleFrame.AutoButtonColor = false
+    ToggleFrame.Text = ""
 
-                TogBoxCorner.CornerRadius = UDim.new(0, 4)
-                TogBoxCorner.Parent = TogBox
+    TogCorner.CornerRadius = UDim.new(0, 6)
+    TogCorner.Parent = ToggleFrame
 
-                TogBoxStroke.Parent = TogBox
-                TogBoxStroke.Thickness = 1
-                TogBoxStroke.Color = Color3.fromRGB(50,50,50)
+    TogTitle.Parent = ToggleFrame
+    TogTitle.BackgroundTransparency = 1
+    TogTitle.Position = UDim2.new(0, 10, 0, 0)
+    TogTitle.Size = UDim2.new(1, -40, 1, 0)
+    TogTitle.Font = Enum.Font.Gotham
+    TogTitle.Text = text
+    TogTitle.TextColor3 = Color_Text
+    TogTitle.TextSize = 13
+    TogTitle.TextXAlignment = Enum.TextXAlignment.Left
 
-                Check.Parent = TogBox
-                Check.BackgroundColor3 = Color_Accent
-                Check.AnchorPoint = Vector2.new(0.5,0.5)
-                Check.Position = UDim2.new(0.5,0,0.5,0)
-                Check.Size = UDim2.new(0, 0, 0, 0)
+    TogBox.Parent = ToggleFrame
+    TogBox.BackgroundColor3 = Color_Main
+    TogBox.Position = UDim2.new(1, -26, 0.5, -9)
+    TogBox.Size = UDim2.new(0, 18, 0, 18)
 
-                CheckCorner.CornerRadius = UDim.new(0, 2)
-                CheckCorner.Parent = Check
+    TogBoxCorner.CornerRadius = UDim.new(0, 4)
+    TogBoxCorner.Parent = TogBox
 
-                if toggled then
-                    Check.Size = UDim2.new(0, 10, 0, 10)
-                    TogBoxStroke.Color = Color_Accent
-                end
+    TogBoxStroke.Parent = TogBox
+    TogBoxStroke.Thickness = 1
+    TogBoxStroke.Color = Color3.fromRGB(50,50,50)
 
-                ToggleFrame.MouseEnter:Connect(function()
-                    TweenService:Create(ToggleFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(35,35,35)}):Play()
-                end)
-                ToggleFrame.MouseLeave:Connect(function()
-                    TweenService:Create(ToggleFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color_Sec}):Play()
-                end)
+    Check.Parent = TogBox
+    Check.BackgroundColor3 = Color_Accent
+    Check.AnchorPoint = Vector2.new(0.5,0.5)
+    Check.Position = UDim2.new(0.5,0,0.5,0)
+    Check.Size = UDim2.new(0, 0, 0, 0)
 
-                ToggleFrame.MouseButton1Click:Connect(function()
-                    toggled = not toggled
-                    if toggled then
-                        TweenService:Create(Check, TweenInfo.new(0.2, Enum.EasingStyle.Back), {Size = UDim2.new(0, 10, 0, 10)}):Play()
-                        TweenService:Create(TogBoxStroke, TweenInfo.new(0.2), {Color = Color_Accent}):Play()
-                    else
-                        TweenService:Create(Check, TweenInfo.new(0.2), {Size = UDim2.new(0, 0, 0, 0)}):Play()
-                        TweenService:Create(TogBoxStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(50,50,50)}):Play()
-                    end
-                    pcall(callback, toggled)
-                end)
-            end
+    CheckCorner.CornerRadius = UDim.new(0, 2)
+    CheckCorner.Parent = Check
+
+    if toggled then
+        Check.Size = UDim2.new(0, 10, 0, 10)
+        TogBoxStroke.Color = Color_Accent
+    end
+
+    ToggleFrame.MouseEnter:Connect(function()
+        TweenService:Create(ToggleFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(35,35,35)}):Play()
+    end)
+    ToggleFrame.MouseLeave:Connect(function()
+        TweenService:Create(ToggleFrame, TweenInfo.new(0.2), {BackgroundColor3 = Color_Sec}):Play()
+    end)
+
+    ToggleFrame.MouseButton1Click:Connect(function()
+        toggled = not toggled
+        if toggled then
+            TweenService:Create(Check, TweenInfo.new(0.2, Enum.EasingStyle.Back), {Size = UDim2.new(0, 10, 0, 10)}):Play()
+            TweenService:Create(TogBoxStroke, TweenInfo.new(0.2), {Color = Color_Accent}):Play()
+        else
+            TweenService:Create(Check, TweenInfo.new(0.2), {Size = UDim2.new(0, 0, 0, 0)}):Play()
+            TweenService:Create(TogBoxStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(50,50,50)}):Play()
+        end
+        pcall(callback, toggled)
+    end)
+
+    if infoText then
+        Elements:Tooltip(ToggleFrame, infoText)
+    end
+end
+
             
             function Elements:Discord(data)
                 local DiscordFrame = Instance.new("Frame")
@@ -1075,107 +1091,197 @@ local Library = (function()
                 end)
             end
 
-            function Elements:Dropdown(text, options, callback)
-                local DropFrame = Instance.new("Frame")
-                local DropCorner = Instance.new("UICorner")
-                local DropButton = Instance.new("TextButton")
-                local DropTitle = Instance.new("TextLabel")
-                local DropArrow = Instance.new("ImageLabel")
-                local OptionHolder = Instance.new("Frame")
-                local OptionList = Instance.new("UIListLayout")
+    function Elements:MultiDropdown(Configs)
+    local name = Configs.Title or "Multi-Select"
+    local Options = Configs.Options or {}
+    local DefaultSelected = Configs.Default or {}
+    local Callback = Configs.Callback or function() end
+
+    local Selected = {}
+    for _, v in pairs(DefaultSelected) do Selected[v] = true end
+
+    local Frame = Instance.new("Frame")
+    local FrameCorner = Instance.new("UICorner")
+    local FrameStroke = Instance.new("UIStroke")
+    
+    Frame.Parent = Page
+    Frame.Size = UDim2.new(1, 0, 0, 25)
+    Frame.BackgroundColor3 = Color_Sec
+    Frame.ClipsDescendants = true
+
+    FrameCorner.CornerRadius = UDim.new(0, 6)
+    FrameCorner.Parent = Frame
+    FrameStroke.Color = Color3.fromRGB(45, 45, 45)
+    FrameStroke.Parent = Frame
+
+    local click = Instance.new("TextButton")
+    click.Parent = Frame
+    click.Size = UDim2.new(1, 0, 0, 25)
+    click.BackgroundTransparency = 1
+    click.Text = ""
+
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Parent = Frame
+    TextLabel.Size = UDim2.new(1, -70, 0, 25)
+    TextLabel.Position = UDim2.new(0, 10, 0, 0)
+    TextLabel.TextSize = 12
+    TextLabel.TextColor3 = Color_Text
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TextLabel.Text = name
+    TextLabel.Font = Enum.Font.Gotham
+    TextLabel.BackgroundTransparency = 1
+
+    local DropIcon = Instance.new("ImageLabel")
+    DropIcon.Parent = Frame
+    DropIcon.Size = UDim2.new(0, 14, 0, 14)
+    DropIcon.Position = UDim2.new(1, -22, 0, 5.5)
+    DropIcon.BackgroundTransparency = 1
+    DropIcon.Image = "rbxassetid://6031091004"
+    DropIcon.ImageColor3 = Color_Text
+    DropIcon.Rotation = 0
+
+    local SearchBox = Instance.new("TextBox")
+    SearchBox.Parent = Frame
+    SearchBox.Size = UDim2.new(1, -20, 0, 20)
+    SearchBox.Position = UDim2.new(0, 10, 0, 30)
+    SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    SearchBox.TextColor3 = Color_Text
+    SearchBox.PlaceholderText = "Search options..."
+    SearchBox.Text = ""
+    SearchBox.TextSize = 11
+    SearchBox.Font = Enum.Font.Gotham
+    SearchBox.Visible = false
+    Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0, 4)
+
+    local OptionContainer = Instance.new("ScrollingFrame")
+    OptionContainer.Parent = Frame
+    OptionContainer.Size = UDim2.new(1, -20, 0, 90)
+    OptionContainer.Position = UDim2.new(0, 10, 0, 55)
+    OptionContainer.BackgroundTransparency = 1
+    OptionContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
+    OptionContainer.ScrollBarThickness = 2
+    OptionContainer.Visible = false
+    
+    local Layout = Instance.new("UIListLayout", OptionContainer)
+    Layout.Padding = UDim.new(0, 3)
+
+    local function updateLayout()
+        OptionContainer.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y)
+    end
+    Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateLayout)
+
+    local OptionButtons = {}
+
+    local function RefreshOptions()
+        for _, btn in pairs(OptionButtons) do btn:Destroy() end
+        OptionButtons = {}
+
+        for _, option in pairs(Options) do
+            local OptBtn = Instance.new("TextButton")
+            OptBtn.Parent = OptionContainer
+            OptBtn.Size = UDim2.new(1, 0, 0, 20)
+            OptBtn.BackgroundColor3 = Selected[option] and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(35, 35, 35)
+            OptBtn.Text = "  " .. tostring(option)
+            OptBtn.TextColor3 = Selected[option] and Color3.fromRGB(255, 0, 0) or Color_Text
+            OptBtn.TextXAlignment = Enum.TextXAlignment.Left
+            OptBtn.Font = Enum.Font.Gotham
+            OptBtn.TextSize = 11
+            Instance.new("UICorner", OptBtn).CornerRadius = UDim.new(0, 4)
+
+            OptBtn.MouseButton1Click:Connect(function()
+                Selected[option] = not Selected[option]
+                OptBtn.BackgroundColor3 = Selected[option] and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(35, 35, 35)
+                OptBtn.TextColor3 = Selected[option] and Color3.fromRGB(255, 0, 0) or Color_Text
                 
-                local dropped = false
+                local tbl = {}
+                for k, v in pairs(Selected) do if v then table.insert(tbl, k) end end
+                pcall(Callback, tbl)
+            end)
 
-                DropFrame.Parent = Page
-                DropFrame.BackgroundColor3 = Color_Sec
-                DropFrame.Size = UDim2.new(1, 0, 0, 32)
-                DropFrame.ClipsDescendants = true
-                DropFrame.ZIndex = 2
+            OptionButtons[option] = OptBtn
+        end
+    end
 
-                DropCorner.CornerRadius = UDim.new(0, 6)
-                DropCorner.Parent = DropFrame
-
-                DropButton.Parent = DropFrame
-                DropButton.BackgroundTransparency = 1
-                DropButton.Size = UDim2.new(1, 0, 0, 32)
-                DropButton.Text = ""
-
-                DropTitle.Parent = DropFrame
-                DropTitle.BackgroundTransparency = 1
-                DropTitle.Position = UDim2.new(0, 10, 0, 0)
-                DropTitle.Size = UDim2.new(1, -35, 0, 32)
-                DropTitle.Font = Enum.Font.Gotham
-                DropTitle.Text = text
-                DropTitle.TextColor3 = Color_Text
-                DropTitle.TextSize = 13
-                DropTitle.TextXAlignment = Enum.TextXAlignment.Left
-
-                DropArrow.Parent = DropFrame
-                DropArrow.BackgroundTransparency = 1
-                DropArrow.Position = UDim2.new(1, -25, 0, 8)
-                DropArrow.Size = UDim2.new(0, 16, 0, 16)
-                DropArrow.Image = "rbxassetid://6031091004"
-                DropArrow.ImageColor3 = Color_Accent
-
-                OptionHolder.Parent = DropFrame
-                OptionHolder.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-                OptionHolder.BorderSizePixel = 0
-                OptionHolder.Position = UDim2.new(0, 0, 0, 32)
-                OptionHolder.Size = UDim2.new(1, 0, 0, 0)
-
-                OptionList.Parent = OptionHolder
-                OptionList.SortOrder = Enum.SortOrder.LayoutOrder
-
-                local function RefreshOptions()
-                    for _, v in pairs(OptionHolder:GetChildren()) do
-                        if v:IsA("TextButton") then v:Destroy() end
-                    end
-                    
-                    for _, opt in pairs(options) do
-                        local OptBtn = Instance.new("TextButton")
-                        OptBtn.Parent = OptionHolder
-                        OptBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-                        OptBtn.Size = UDim2.new(1, 0, 0, 30)
-                        OptBtn.Font = Enum.Font.Gotham
-                        OptBtn.Text = opt
-                        OptBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
-                        OptBtn.TextSize = 13
-                        OptBtn.BorderSizePixel = 0
-                        
-                        OptBtn.MouseEnter:Connect(function()
-                            TweenService:Create(OptBtn, TweenInfo.new(0.2), {TextColor3 = Color_Accent}):Play()
-                        end)
-                        OptBtn.MouseLeave:Connect(function()
-                            TweenService:Create(OptBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(200, 200, 200)}):Play()
-                        end)
-
-                        OptBtn.MouseButton1Click:Connect(function()
-                            DropTitle.Text = text .. ": " .. opt
-                            pcall(callback, opt)
-                            dropped = false
-                            TweenService:Create(DropFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 32)}):Play()
-                            TweenService:Create(DropArrow, TweenInfo.new(0.3), {Rotation = 0}):Play()
-                        end)
-                    end
-                end
-
-                RefreshOptions()
-
-                DropButton.MouseButton1Click:Connect(function()
-                    dropped = not dropped
-                    if dropped then
-                        local count = #options
-                        local contentSize = count * 30
-                        TweenService:Create(DropFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 32 + contentSize)}):Play()
-                        TweenService:Create(OptionHolder, TweenInfo.new(0.3), {Size = UDim2.new(1, 0, 0, contentSize)}):Play()
-                        TweenService:Create(DropArrow, TweenInfo.new(0.3), {Rotation = 180}):Play()
-                    else
-                        TweenService:Create(DropFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 32)}):Play()
-                        TweenService:Create(OptionHolder, TweenInfo.new(0.3), {Size = UDim2.new(1, 0, 0, 0)}):Play()
-                        TweenService:Create(DropArrow, TweenInfo.new(0.3), {Rotation = 0}):Play()
-                    end
-                end)
+    SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
+        local text = SearchBox.Text:lower()
+        for opt, btn in pairs(OptionButtons) do
+            if text == "" or opt:lower():find(text) then
+                btn.Visible = true
+            else
+                btn.Visible = false
             end
+        end
+    end)
+
+    local open = false
+    click.MouseButton1Click:Connect(function()
+        open = not open
+        if open then
+            SearchBox.Visible = true
+            OptionContainer.Visible = true
+            TweenService:Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 155)}):Play()
+            TweenService:Create(DropIcon, TweenInfo.new(0.2), {Rotation = 180}):Play()
+        else
+            TweenService:Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 25)}):Play()
+            TweenService:Create(DropIcon, TweenInfo.new(0.2), {Rotation = 0}):Play()
+            task.wait(0.2)
+            SearchBox.Visible = false
+            OptionContainer.Visible = false
+        end
+    end)
+
+    RefreshOptions()
+    if Configs.Tooltip then Elements:Tooltip(Frame, Configs.Tooltip) end
+
+    return {
+        GetSelected = function()
+            local tbl = {}
+            for k, v in pairs(Selected) do if v then table.insert(tbl, k) end end
+            return tbl
+        end
+    }
+end
+
+
+function Elements:Tooltip(TargetFrame, Text)
+    local TooltipFrame = Instance.new("Frame")
+    local TooltipCorner = Instance.new("UICorner")
+    local TooltipLabel = Instance.new("TextLabel")
+
+    TooltipFrame.Parent = TargetFrame.Parent.Parent -- وضعه على الـ ScreenGui مباشرة
+    TooltipFrame.Size = UDim2.new(0, 120, 0, 20)
+    TooltipFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    TooltipFrame.BackgroundTransparency = 1
+    TooltipFrame.ZIndex = 100
+    TooltipFrame.Visible = false
+
+    TooltipCorner.CornerRadius = UDim.new(0, 4)
+    TooltipCorner.Parent = TooltipFrame
+
+    TooltipLabel.Parent = TooltipFrame
+    TooltipLabel.Size = UDim2.new(1, 0, 1, 0)
+    TooltipLabel.BackgroundTransparency = 1
+    TooltipLabel.Text = Text
+    TooltipLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
+    TooltipLabel.TextSize = 10
+    TooltipLabel.Font = Enum.Font.Gotham
+
+    TargetFrame.MouseEnter:Connect(function()
+        TooltipFrame.Visible = true
+        TweenService:Create(TooltipFrame, TweenInfo.new(0.15), {BackgroundTransparency = 0}):Play()
+    end)
+
+    TargetFrame.MouseMoved:Connect(function()
+        local MouseLoc = game:GetService("UserInputService"):GetMouseLocation()
+        TooltipFrame.Position = UDim2.new(0, MouseLoc.X + 15, 0, MouseLoc.Y - 25)
+    end)
+
+    TargetFrame.MouseLeave:Connect(function()
+        TweenService:Create(TooltipFrame, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
+        task.wait(0.15)
+        TooltipFrame.Visible = false
+    end)
+end
 
             function Elements:Paragraph(config)
                 local PFrame = Instance.new("Frame")
@@ -1265,240 +1371,384 @@ local Library = (function()
                 
                 return Lab
             end
+            
+            function Elements:Keybind(Configs)
+    local name = Configs.Title or "Keybind"
+    local Default = Configs.Default or Enum.KeyCode.E
+    local Callback = Configs.Callback or function() end
 
-            function Elements:ColorPicker(Configs)
-                local name = Configs.Title or "Color Picker"
-                local Default = Configs.Default or Color3.fromRGB(255, 0, 0)
-                local Callback = Configs.Callback or function() end
-                
-                local ColorH, ColorS, ColorV = Color3.toHSV(Default)
-                pcall(Callback, Default)
+    local CurrentKey = Default
+    local WhitelistedKeys = {
+        [Enum.KeyCode.W] = true, [Enum.KeyCode.A] = true, 
+        [Enum.KeyCode.S] = true, [Enum.KeyCode.D] = true,
+        [Enum.KeyCode.Slash] = true, [Enum.KeyCode.Tab] = true
+    }
 
-                local TextButton = Instance.new("Frame")
-                local TextButtonCorner = Instance.new("UICorner")
-                local TextButtonStroke = Instance.new("UIStroke")
-                
-                TextButton.Parent = Page
-                TextButton.Size = UDim2.new(1, 0, 0, 25)
-                TextButton.BackgroundColor3 = Color_Sec
-                TextButton.ClipsDescendants = true
+    local BindFrame = Instance.new("Frame")
+    local BindCorner = Instance.new("UICorner")
+    local BindStroke = Instance.new("UIStroke")
+    
+    BindFrame.Parent = Page
+    BindFrame.Size = UDim2.new(1, 0, 0, 25)
+    BindFrame.BackgroundColor3 = Color_Sec
 
-                TextButtonCorner.CornerRadius = UDim.new(0, 6)
-                TextButtonCorner.Parent = TextButton
+    BindCorner.CornerRadius = UDim.new(0, 6)
+    BindCorner.Parent = BindFrame
 
-                TextButtonStroke.Color = Color3.fromRGB(45, 45, 45)
-                TextButtonStroke.Thickness = 1
-                TextButtonStroke.Parent = TextButton
+    BindStroke.Color = Color3.fromRGB(45, 45, 45)
+    BindStroke.Thickness = 1
+    BindStroke.Parent = BindFrame
 
-                local click = Instance.new("TextButton")
-                click.Parent = TextButton
-                click.Size = UDim2.new(1, 0, 0, 25)
-                click.BackgroundTransparency = 1
-                click.AutoButtonColor = false
-                click.Text = ""
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Parent = BindFrame
+    TextLabel.Size = UDim2.new(1, -10, 1, 0)
+    TextLabel.Position = UDim2.new(0, 10, 0, 0)
+    TextLabel.TextSize = 12
+    TextLabel.TextColor3 = Color_Text
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TextLabel.Text = name
+    TextLabel.Font = Enum.Font.Gotham
+    TextLabel.BackgroundTransparency = 1
 
-                local TextLabel = Instance.new("TextLabel")
-                TextLabel.Parent = TextButton
-                TextLabel.Size = UDim2.new(1, -10, 0, 25)
-                TextLabel.Position = UDim2.new(0, 35, 0, 0)
-                TextLabel.TextSize = 12
-                TextLabel.TextColor3 = Color_Text
-                TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-                TextLabel.Text = name
-                TextLabel.Font = Enum.Font.Gotham
-                TextLabel.BackgroundTransparency = 1
+    local BindBtn = Instance.new("TextButton")
+    local BtnCorner = Instance.new("UICorner")
+    
+    BindBtn.Parent = BindFrame
+    BindBtn.Size = UDim2.new(0, 70, 0, 18)
+    BindBtn.Position = UDim2.new(1, -75, 0, 3.5)
+    BindBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    BindBtn.Font = Enum.Font.GothamBold
+    BindBtn.Text = CurrentKey.Name
+    BindBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+    BindBtn.TextSize = 10
 
-                local picker = Instance.new("Frame")
-                local pickerCorner = Instance.new("UICorner")
-                local pickerStroke = Instance.new("UIStroke")
-                
-                picker.Parent = TextButton
-                picker.Size = UDim2.new(0, 20, 0, 20)
-                picker.Position = UDim2.new(0, 5, 0, 2.5)
-                picker.BackgroundColor3 = Default
+    BtnCorner.CornerRadius = UDim.new(0, 4)
+    BtnCorner.Parent = BindBtn
 
-                pickerCorner.CornerRadius = UDim.new(0, 4)
-                pickerCorner.Parent = picker
+    local Listening = false
 
-                pickerStroke.Color = Color3.fromRGB(60, 60, 60)
-                pickerStroke.Thickness = 1
-                pickerStroke.Parent = picker
+    BindBtn.MouseButton1Click:Connect(function()
+        if Listening then return end
+        Listening = true
+        BindBtn.Text = "..."
+        BindBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+    end)
 
-                local UI_Grade = Instance.new("ImageButton")
-                local UI_GradeCorner = Instance.new("UICorner")
-                local UI_GradeStroke = Instance.new("UIStroke")
-                
-                UI_Grade.Parent = TextButton
-                UI_Grade.Size = UDim2.new(1, -100, 0, 95)
-                UI_Grade.Position = UDim2.new(0, 10, 0, 37)
-                UI_Grade.Visible = false
-                UI_Grade.Image = "rbxassetid://4155801252"
-
-                UI_GradeCorner.CornerRadius = UDim.new(0, 4)
-                UI_GradeCorner.Parent = UI_Grade
-
-                UI_GradeStroke.Color = Color3.fromRGB(50, 50, 50)
-                UI_GradeStroke.Parent = UI_Grade
-
-                local SavePos = Instance.new("Frame")
-                SavePos.Parent = UI_Grade
-                SavePos.Visible = false
-
-                local grade = Instance.new("TextButton")
-                local gradeCorner = Instance.new("UICorner")
-                local gradeStroke = Instance.new("UIStroke")
-                local gradGradient = Instance.new("UIGradient")
-                
-                grade.Parent = TextButton
-                grade.Size = UDim2.new(0, 30, 0, 95)
-                grade.Position = UDim2.new(1, -10, 0, 37)
-                grade.AnchorPoint = Vector2.new(1, 0)
-                grade.Visible = false
-                grade.Text = ""
-
-                gradeCorner.CornerRadius = UDim.new(0, 4)
-                gradeCorner.Parent = grade
-
-                gradeStroke.Color = Color3.fromRGB(50, 50, 50)
-                gradeStroke.Parent = grade
-
-                gradGradient.Rotation = 90
-                gradGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 4)),
-                    ColorSequenceKeypoint.new(0.20, Color3.fromRGB(234, 255, 0)),
-                    ColorSequenceKeypoint.new(0.40, Color3.fromRGB(21, 255, 0)),
-                    ColorSequenceKeypoint.new(0.60, Color3.fromRGB(0, 255, 255)),
-                    ColorSequenceKeypoint.new(0.80, Color3.fromRGB(0, 17, 255)),
-                    ColorSequenceKeypoint.new(0.90, Color3.fromRGB(255, 0, 251)),
-                    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 0, 4))
-                })
-                gradGradient.Parent = grade
-
-                local SavePos2 = Instance.new("Frame")
-                SavePos2.Parent = grade
-                SavePos2.Visible = false
-                SavePos2.Size = UDim2.new(1, 0, 0, 0)
-
-                local A_1 = Instance.new("Frame")
-                local A_1Stroke = Instance.new("UIStroke")
-                
-                A_1.Parent = TextButton
-                A_1.Size = UDim2.new(1, 0, 0, 1)
-                A_1.Position = UDim2.new(0, 0, 0, 30)
-                A_1.Visible = false
-                A_1Stroke.Color = Color3.fromRGB(45, 45, 45)
-                A_1Stroke.Parent = A_1
-
-                local Select1 = Instance.new("Frame")
-                local Select1Corner = Instance.new("UICorner")
-                local Select1Stroke = Instance.new("UIStroke")
-                
-                Select1.Parent = grade
-                Select1.Size = UDim2.new(1, 0, 0, 6)
-                Select1.Position = UDim2.new(0, 0, 0, ColorH * 95)
-                Select1.BackgroundTransparency = 1
-                Select1.Active = true
-                Select1.Draggable = true
-
-                Select1Corner.CornerRadius = UDim.new(1, 0)
-                Select1Corner.Parent = Select1
-                Select1Stroke.Color = Color3.fromRGB(255, 255, 255)
-                Select1Stroke.Thickness = 1.5
-                Select1Stroke.Parent = Select1
-
-                local Select2 = Instance.new("Frame")
-                local Select2Corner = Instance.new("UICorner")
-                local Select2Stroke = Instance.new("UIStroke")
-                
-                Select2.Parent = UI_Grade
-                Select2.Size = UDim2.new(0, 10, 0, 10)
-                Select2.Position = UDim2.new(0, ColorS * 222, 0, (1 - ColorV) * 95)
-                Select2.BackgroundTransparency = 1
-                Select2.Active = true
-                Select2.Draggable = true
-
-                Select2Corner.CornerRadius = UDim.new(1, 0)
-                Select2Corner.Parent = Select2
-                Select2Stroke.Color = Color3.fromRGB(255, 255, 255)
-                Select2Stroke.Thickness = 1.5
-                Select2Stroke.Parent = Select2
-
-                local function callback()
-                    pcall(Callback, Color3.fromHSV(ColorH, ColorS, ColorV))
-                end
-
-                local function updcolorpicker()
-                    ColorH = math.clamp(Select1.Position.Y.Offset / 95, 0, 1)
-                    ColorS = math.clamp(Select2.Position.X.Offset / UI_Grade.AbsoluteSize.X, 0, 1)
-                    ColorV = math.clamp(1 - (Select2.Position.Y.Offset / 95), 0, 1)
-                    
-                    UI_Grade.ImageColor3 = Color3.fromHSV(ColorH, 1, 1)
-                    picker.BackgroundColor3 = Color3.fromHSV(ColorH, ColorS, ColorV)
-                    callback()
-                end
-
-                UI_Grade.MouseButton1Click:Connect(function()
-                    local mouse = UserInputService:GetMouseLocation()
-                    local savepos = UI_Grade.AbsolutePosition
-                    local newX = math.clamp(mouse.X - savepos.X, 0, UI_Grade.AbsoluteSize.X)
-                    local newY = math.clamp(mouse.Y - savepos.Y - 36, 0, 95)
-                    TweenService:Create(Select2, TweenInfo.new(0.2), {Position = UDim2.new(0, newX, 0, newY)}):Play()
-                    task.wait(0.05)
-                    updcolorpicker()
-                end)
-
-                grade.MouseButton1Click:Connect(function()
-                    local mouse = UserInputService:GetMouseLocation().Y - 36
-                    local savepos = grade.AbsolutePosition.Y
-                    local newY = math.clamp(mouse - savepos, 0, 95)
-                    TweenService:Create(Select1, TweenInfo.new(0.2), {Position = UDim2.new(0, 0, 0, newY)}):Play()
-                    task.wait(0.05)
-                    updcolorpicker()
-                end)
-
-                Select1.Changed:Connect(function(prop)
-                    if prop == "Position" then
-                        Select1.Position = UDim2.new(0, 0, 0, math.clamp(Select1.Position.Y.Offset, 0, 95))
-                        updcolorpicker()
-                    end
-                end)
-
-                Select2.Changed:Connect(function(prop)
-                    if prop == "Position" then
-                        Select2.Position = UDim2.new(0, math.clamp(Select2.Position.X.Offset, 0, 222), 0, math.clamp(Select2.Position.Y.Offset, 0, 95))
-                        updcolorpicker()
-                    end
-                end)
-
-                TextButton.Changed:Connect(function(prop)
-                    if prop == "Size" then
-                        if TextButton.Size.Y.Offset >= 60 then
-                            picker.Position = UDim2.new(0, 5, 0, 5)
-                            UI_Grade.Visible = true
-                            A_1.Visible = true
-                            grade.Visible = true
-                        else
-                            picker.Position = UDim2.new(0, 5, 0, 2.5)
-                            UI_Grade.Visible = false
-                            A_1.Visible = false
-                            grade.Visible = false
-                        end
-                    end
-                end)
-
-                local onoff = false
-                click.MouseButton1Click:Connect(function()
-                    onoff = not onoff
-                    if onoff == true then
-                        TweenService:Create(TextButton, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 0, 145)}):Play()
-                    else
-                        TweenService:Create(TextButton, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 0, 25)}):Play()
-                    end
-                end)
-                
-                updcolorpicker()
-                return picker
+    game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
+        if gpe then return end
+        if Listening and input.UserInputType == Enum.UserInputType.Keyboard then
+            if not WhitelistedKeys[input.KeyCode] then
+                CurrentKey = input.KeyCode
+                BindBtn.Text = CurrentKey.Name
             end
+            Listening = false
+            BindBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+        elseif input.KeyCode == CurrentKey then
+            pcall(Callback, CurrentKey)
+        end
+    end)
+
+    if Configs.Tooltip then
+        Elements:Tooltip(BindFrame, Configs.Tooltip)
+    end
+
+    return {
+        Set = function(newKey)
+            CurrentKey = newKey
+            BindBtn.Text = CurrentKey.Name
+        end
+    }
+end
+    function Elements:ColorPicker(Configs)
+    local name = Configs.Title or "Color Picker"
+    local Default = Configs.Default or Color3.fromRGB(255, 0, 0)
+    local Callback = Configs.Callback or function() end
+    
+    local ColorH, ColorS, ColorV = Color3.toHSV(Default)
+    pcall(Callback, Default)
+
+    local TextButton = Instance.new("Frame")
+    local TextButtonCorner = Instance.new("UICorner")
+    local TextButtonStroke = Instance.new("UIStroke")
+    
+    TextButton.Parent = Page
+    TextButton.Size = UDim2.new(1, 0, 0, 25)
+    TextButton.BackgroundColor3 = Color_Sec
+    TextButton.ClipsDescendants = true
+
+    TextButtonCorner.CornerRadius = UDim.new(0, 6)
+    TextButtonCorner.Parent = TextButton
+
+    TextButtonStroke.Color = Color3.fromRGB(45, 45, 45)
+    TextButtonStroke.Thickness = 1
+    TextButtonStroke.Parent = TextButton
+
+    local click = Instance.new("TextButton")
+    click.Parent = TextButton
+    click.Size = UDim2.new(1, 0, 0, 25)
+    click.BackgroundTransparency = 1
+    click.AutoButtonColor = false
+    click.Text = ""
+
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Parent = TextButton
+    TextLabel.Size = UDim2.new(1, -10, 0, 25)
+    TextLabel.Position = UDim2.new(0, 35, 0, 0)
+    TextLabel.TextSize = 12
+    TextLabel.TextColor3 = Color_Text
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TextLabel.Text = name
+    TextLabel.Font = Enum.Font.Gotham
+    TextLabel.BackgroundTransparency = 1
+
+    local picker = Instance.new("Frame")
+    local pickerCorner = Instance.new("UICorner")
+    local pickerStroke = Instance.new("UIStroke")
+    
+    picker.Parent = TextButton
+    picker.Size = UDim2.new(0, 20, 0, 20)
+    picker.Position = UDim2.new(0, 5, 0, 2.5)
+    picker.BackgroundColor3 = Default
+
+    pickerCorner.CornerRadius = UDim.new(0, 4)
+    pickerCorner.Parent = picker
+
+    pickerStroke.Color = Color3.fromRGB(60, 60, 60)
+    pickerStroke.Thickness = 1
+    pickerStroke.Parent = picker
+
+    -- [تعديل] زر الـ Rainbow بدون أي UIStroke
+    local RainbowToggle = Instance.new("TextButton")
+    local RainbowToggleCorner = Instance.new("UICorner")
+    
+    RainbowToggle.Parent = TextButton
+    RainbowToggle.Size = UDim2.new(0, 60, 0, 20)
+    RainbowToggle.Position = UDim2.new(1, -70, 0, 2.5)
+    RainbowToggle.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    RainbowToggle.Font = Enum.Font.GothamBold
+    RainbowToggle.Text = "Rainbow"
+    RainbowToggle.TextColor3 = Color3.fromRGB(150, 150, 150)
+    RainbowToggle.TextSize = 10
+    RainbowToggle.ZIndex = 5
+
+    RainbowToggleCorner.CornerRadius = UDim.new(0, 4)
+    RainbowToggleCorner.Parent = RainbowToggle
+
+    local UI_Grade = Instance.new("ImageButton")
+    local UI_GradeCorner = Instance.new("UICorner")
+    local UI_GradeStroke = Instance.new("UIStroke")
+    
+    UI_Grade.Parent = TextButton
+    UI_Grade.Size = UDim2.new(1, -100, 0, 95)
+    UI_Grade.Position = UDim2.new(0, 10, 0, 37)
+    UI_Grade.Visible = false
+    UI_Grade.Image = "rbxassetid://4155801252"
+
+    UI_GradeCorner.CornerRadius = UDim.new(0, 4)
+    UI_GradeCorner.Parent = UI_Grade
+
+    UI_GradeStroke.Color = Color3.fromRGB(50, 50, 50)
+    UI_GradeStroke.Parent = UI_Grade
+
+    local SavePos = Instance.new("Frame")
+    SavePos.Parent = UI_Grade
+    SavePos.Visible = false
+
+    local grade = Instance.new("TextButton")
+    local gradeCorner = Instance.new("UICorner")
+    local gradeStroke = Instance.new("UIStroke")
+    local gradGradient = Instance.new("UIGradient")
+    
+    grade.Parent = TextButton
+    grade.Size = UDim2.new(0, 30, 0, 95)
+    grade.Position = UDim2.new(1, -10, 0, 37)
+    grade.AnchorPoint = Vector2.new(1, 0)
+    grade.Visible = false
+    grade.Text = ""
+
+    gradeCorner.CornerRadius = UDim.new(0, 4)
+    gradeCorner.Parent = grade
+
+    gradeStroke.Color = Color3.fromRGB(50, 50, 50)
+    gradeStroke.Parent = grade
+
+    gradGradient.Rotation = 90
+    gradGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 4)),
+        ColorSequenceKeypoint.new(0.20, Color3.fromRGB(234, 255, 0)),
+        ColorSequenceKeypoint.new(0.40, Color3.fromRGB(21, 255, 0)),
+        ColorSequenceKeypoint.new(0.60, Color3.fromRGB(0, 255, 255)),
+        ColorSequenceKeypoint.new(0.80, Color3.fromRGB(0, 17, 255)),
+        ColorSequenceKeypoint.new(0.90, Color3.fromRGB(255, 0, 251)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 0, 4))
+    })
+    gradGradient.Parent = grade
+
+    local SavePos2 = Instance.new("Frame")
+    SavePos2.Parent = grade
+    SavePos2.Visible = false
+    SavePos2.Size = UDim2.new(1, 0, 0, 0)
+
+    local A_1 = Instance.new("Frame")
+    local A_1Stroke = Instance.new("UIStroke")
+    
+    A_1.Parent = TextButton
+    A_1.Size = UDim2.new(1, 0, 0, 1)
+    A_1.Position = UDim2.new(0, 0, 0, 30)
+    A_1.Visible = false
+    A_1Stroke.Color = Color3.fromRGB(45, 45, 45)
+    A_1Stroke.Parent = A_1
+
+    local Select1 = Instance.new("Frame")
+    local Select1Corner = Instance.new("UICorner")
+    local Select1Stroke = Instance.new("UIStroke")
+    
+    Select1.Parent = grade
+    Select1.Size = UDim2.new(1, 0, 0, 6)
+    Select1.Position = UDim2.new(0, 0, 0, ColorH * 95)
+    Select1.BackgroundTransparency = 1
+    Select1.Active = true
+    Select1.Draggable = true
+
+    Select1Corner.CornerRadius = UDim.new(1, 0)
+    Select1Corner.Parent = Select1
+    Select1Stroke.Color = Color3.fromRGB(255, 255, 255)
+    Select1Stroke.Thickness = 1.5
+    Select1Stroke.Parent = Select1
+
+    local Select2 = Instance.new("Frame")
+    local Select2Corner = Instance.new("UICorner")
+    local Select2Stroke = Instance.new("UIStroke")
+    
+    Select2.Parent = UI_Grade
+    Select2.Size = UDim2.new(0, 10, 0, 10)
+    Select2.Position = UDim2.new(0, ColorS * 222, 0, (1 - ColorV) * 95)
+    Select2.BackgroundTransparency = 1
+    Select2.Active = true
+    Select2.Draggable = true
+
+    Select2Corner.CornerRadius = UDim.new(1, 0)
+    Select2Corner.Parent = Select2
+    Select2Stroke.Color = Color3.fromRGB(255, 255, 255)
+    Select2Stroke.Thickness = 1.5
+    Select2Stroke.Parent = Select2
+
+    local function callback()
+        pcall(Callback, Color3.fromHSV(ColorH, ColorS, ColorV))
+    end
+
+    local function updcolorpicker()
+        ColorH = math.clamp(Select1.Position.Y.Offset / 95, 0, 1)
+        ColorS = math.clamp(Select2.Position.X.Offset / UI_Grade.AbsoluteSize.X, 0, 1)
+        ColorV = math.clamp(1 - (Select2.Position.Y.Offset / 95), 0, 1)
+        
+        UI_Grade.ImageColor3 = Color3.fromHSV(ColorH, 1, 1)
+        picker.BackgroundColor3 = Color3.fromHSV(ColorH, ColorS, ColorV)
+        callback()
+    end
+
+    local IsRainbow = false
+    local RainbowConnection = nil
+
+    -- [تعديل] تحديث الألوان عند التفعيل والإيقاف دون استدعاء Stroke
+    local function ToggleRainbow(State)
+        IsRainbow = State
+        if IsRainbow then
+            RainbowToggle.TextColor3 = Color3.fromRGB(255, 0, 0)
+            
+            RainbowConnection = game:GetService("RunService").RenderStepped:Connect(function()
+                local Hue = (tick() % 5) / 5
+                picker.BackgroundColor3 = Color3.fromHSV(Hue, 1, 1)
+                pcall(Callback, picker.BackgroundColor3)
+                
+                Select1.Position = UDim2.new(0, 0, 0, Hue * 95)
+                UI_Grade.ImageColor3 = Color3.fromHSV(Hue, 1, 1)
+            end)
+        else
+            RainbowToggle.TextColor3 = Color3.fromRGB(150, 150, 150)
+            if RainbowConnection then
+                RainbowConnection:Disconnect()
+                RainbowConnection = nil
+            end
+            updcolorpicker()
+        end
+    end
+
+    RainbowToggle.MouseButton1Click:Connect(function()
+        ToggleRainbow(not IsRainbow)
+    end)
+
+    UI_Grade.MouseButton1Click:Connect(function()
+        ToggleRainbow(false)
+        local mouse = UserInputService:GetMouseLocation()
+        local savepos = UI_Grade.AbsolutePosition
+        local newX = math.clamp(mouse.X - savepos.X, 0, UI_Grade.AbsoluteSize.X)
+        local newY = math.clamp(mouse.Y - savepos.Y - 36, 0, 95)
+        TweenService:Create(Select2, TweenInfo.new(0.2), {Position = UDim2.new(0, newX, 0, newY)}):Play()
+        task.wait(0.05)
+        updcolorpicker()
+    end)
+
+    grade.MouseButton1Click:Connect(function()
+        ToggleRainbow(false)
+        local mouse = UserInputService:GetMouseLocation().Y - 36
+        local savepos = grade.AbsolutePosition.Y
+        local newY = math.clamp(mouse - savepos, 0, 95)
+        TweenService:Create(Select1, TweenInfo.new(0.2), {Position = UDim2.new(0, 0, 0, newY)}):Play()
+        task.wait(0.05)
+        updcolorpicker()
+    end)
+
+    Select1.Changed:Connect(function(prop)
+        if prop == "Position" then
+            Select1.Position = UDim2.new(0, 0, 0, math.clamp(Select1.Position.Y.Offset, 0, 95))
+            if not IsRainbow then
+                updcolorpicker()
+            end
+        end
+    end)
+
+    Select2.Changed:Connect(function(prop)
+        if prop == "Position" then
+            Select2.Position = UDim2.new(0, math.clamp(Select2.Position.X.Offset, 0, 222), 0, math.clamp(Select2.Position.Y.Offset, 0, 95))
+            if not IsRainbow then
+                updcolorpicker()
+            end
+        end
+    end)
+
+    TextButton.Changed:Connect(function(prop)
+        if prop == "Size" then
+            if TextButton.Size.Y.Offset >= 60 then
+                picker.Position = UDim2.new(0, 5, 0, 5)
+                RainbowToggle.Position = UDim2.new(1, -70, 0, 5)
+                UI_Grade.Visible = true
+                A_1.Visible = true
+                grade.Visible = true
+            else
+                picker.Position = UDim2.new(0, 5, 0, 2.5)
+                RainbowToggle.Position = UDim2.new(1, -70, 0, 2.5)
+                UI_Grade.Visible = false
+                A_1.Visible = false
+                grade.Visible = false
+            end
+        end
+    end)
+
+    local onoff = false
+    click.MouseButton1Click:Connect(function()
+        onoff = not onoff
+        if onoff == true then
+            TweenService:Create(TextButton, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 0, 145)}):Play()
+        else
+            TweenService:Create(TextButton, TweenInfo.new(0.2, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 0, 25)}):Play()
+        end
+    end)
+    
+    updcolorpicker()
+    return picker
+end
+
 
             return Elements
         end
