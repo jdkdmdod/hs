@@ -167,8 +167,7 @@ local Library = (function()
         local KeyDescription = Configs.Key and Configs.Key.Description or "Get key on discord server"
         local KeyKey = Configs.Key and Configs.Key.Keys or {"123", "321"}
         local KeyLink = Configs.Key and Configs.Key.KeyLink or ""
-        --  السطر الجديد المعدل والآمن
-local KeyNotifications = Configs.Key and Configs.Key.Notifi and Configs.Key.Notifi.Notifications or true
+        local KeyNotifications = Configs.Key and Configs.Key.Notifi and Configs.Key.Notifi.Notifications or true
         local KeyNotSuccess = Configs.Key and Configs.Key.Notifi and Configs.Key.Notifi.Incorrectkey or "The key is incorrect"
         local KeySuccess = Configs.Key and Configs.Key.Notifi and Configs.Key.Notifi.CorrectKey or "Running the Script..."
         local KeyCopyKeyLink = Configs.Key and Configs.Key.Notifi and Configs.Key.Notifi.CopyKeyLink or "Copied to Clipboard"
