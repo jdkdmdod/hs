@@ -1075,7 +1075,7 @@ local Library = (function()
                 end)
             end
 
-            function Elements:MultiDropdown(Configs)
+    function Elements:MultiDropdown(Configs)
     local name = Configs.Title or "Multi-Select"
     local Options = Configs.Options or {}
     local DefaultSelected = Configs.Default or {}
@@ -1106,7 +1106,7 @@ local Library = (function()
 
     local TextLabel = Instance.new("TextLabel")
     TextLabel.Parent = Frame
-    TextLabel.Size = UDim2.new(1, -40, 0, 25)
+    TextLabel.Size = UDim2.new(1, -70, 0, 25)
     TextLabel.Position = UDim2.new(0, 10, 0, 0)
     TextLabel.TextSize = 12
     TextLabel.TextColor3 = Color_Text
@@ -1115,7 +1115,15 @@ local Library = (function()
     TextLabel.Font = Enum.Font.Gotham
     TextLabel.BackgroundTransparency = 1
 
-    -- خانة البحث
+    local DropIcon = Instance.new("ImageLabel")
+    DropIcon.Parent = Frame
+    DropIcon.Size = UDim2.new(0, 14, 0, 14)
+    DropIcon.Position = UDim2.new(1, -22, 0, 5.5)
+    DropIcon.BackgroundTransparency = 1
+    DropIcon.Image = "rbxassetid://6031091004"
+    DropIcon.ImageColor3 = Color_Text
+    DropIcon.Rotation = 0
+
     local SearchBox = Instance.new("TextBox")
     SearchBox.Parent = Frame
     SearchBox.Size = UDim2.new(1, -20, 0, 20)
@@ -1129,7 +1137,6 @@ local Library = (function()
     SearchBox.Visible = false
     Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0, 4)
 
-    -- حاوية الخيارات المتغيرة (ScrollingFrame)
     local OptionContainer = Instance.new("ScrollingFrame")
     OptionContainer.Parent = Frame
     OptionContainer.Size = UDim2.new(1, -20, 0, 90)
@@ -1179,7 +1186,6 @@ local Library = (function()
         end
     end
 
-    -- تصفية الخيارات عند الكتابة في البحث
     SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
         local text = SearchBox.Text:lower()
         for opt, btn in pairs(OptionButtons) do
@@ -1198,8 +1204,10 @@ local Library = (function()
             SearchBox.Visible = true
             OptionContainer.Visible = true
             TweenService:Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 155)}):Play()
+            TweenService:Create(DropIcon, TweenInfo.new(0.2), {Rotation = 180}):Play()
         else
             TweenService:Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 25)}):Play()
+            TweenService:Create(DropIcon, TweenInfo.new(0.2), {Rotation = 0}):Play()
             task.wait(0.2)
             SearchBox.Visible = false
             OptionContainer.Visible = false
@@ -1217,6 +1225,7 @@ local Library = (function()
         end
     }
 end
+
 
 function Elements:Tooltip(TargetFrame, Text)
     local TooltipFrame = Instance.new("Frame")
