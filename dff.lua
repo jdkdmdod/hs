@@ -1075,107 +1075,188 @@ local Library = (function()
                 end)
             end
 
-            function Elements:Dropdown(text, options, callback)
-                local DropFrame = Instance.new("Frame")
-                local DropCorner = Instance.new("UICorner")
-                local DropButton = Instance.new("TextButton")
-                local DropTitle = Instance.new("TextLabel")
-                local DropArrow = Instance.new("ImageLabel")
-                local OptionHolder = Instance.new("Frame")
-                local OptionList = Instance.new("UIListLayout")
+            function Elements:MultiDropdown(Configs)
+    local name = Configs.Title or "Multi-Select"
+    local Options = Configs.Options or {}
+    local DefaultSelected = Configs.Default or {}
+    local Callback = Configs.Callback or function() end
+
+    local Selected = {}
+    for _, v in pairs(DefaultSelected) do Selected[v] = true end
+
+    local Frame = Instance.new("Frame")
+    local FrameCorner = Instance.new("UICorner")
+    local FrameStroke = Instance.new("UIStroke")
+    
+    Frame.Parent = Page
+    Frame.Size = UDim2.new(1, 0, 0, 25)
+    Frame.BackgroundColor3 = Color_Sec
+    Frame.ClipsDescendants = true
+
+    FrameCorner.CornerRadius = UDim.new(0, 6)
+    FrameCorner.Parent = Frame
+    FrameStroke.Color = Color3.fromRGB(45, 45, 45)
+    FrameStroke.Parent = Frame
+
+    local click = Instance.new("TextButton")
+    click.Parent = Frame
+    click.Size = UDim2.new(1, 0, 0, 25)
+    click.BackgroundTransparency = 1
+    click.Text = ""
+
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Parent = Frame
+    TextLabel.Size = UDim2.new(1, -40, 0, 25)
+    TextLabel.Position = UDim2.new(0, 10, 0, 0)
+    TextLabel.TextSize = 12
+    TextLabel.TextColor3 = Color_Text
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TextLabel.Text = name
+    TextLabel.Font = Enum.Font.Gotham
+    TextLabel.BackgroundTransparency = 1
+
+    -- خانة البحث
+    local SearchBox = Instance.new("TextBox")
+    SearchBox.Parent = Frame
+    SearchBox.Size = UDim2.new(1, -20, 0, 20)
+    SearchBox.Position = UDim2.new(0, 10, 0, 30)
+    SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    SearchBox.TextColor3 = Color_Text
+    SearchBox.PlaceholderText = "Search options..."
+    SearchBox.Text = ""
+    SearchBox.TextSize = 11
+    SearchBox.Font = Enum.Font.Gotham
+    SearchBox.Visible = false
+    Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0, 4)
+
+    -- حاوية الخيارات المتغيرة (ScrollingFrame)
+    local OptionContainer = Instance.new("ScrollingFrame")
+    OptionContainer.Parent = Frame
+    OptionContainer.Size = UDim2.new(1, -20, 0, 90)
+    OptionContainer.Position = UDim2.new(0, 10, 0, 55)
+    OptionContainer.BackgroundTransparency = 1
+    OptionContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
+    OptionContainer.ScrollBarThickness = 2
+    OptionContainer.Visible = false
+    
+    local Layout = Instance.new("UIListLayout", OptionContainer)
+    Layout.Padding = UDim.new(0, 3)
+
+    local function updateLayout()
+        OptionContainer.CanvasSize = UDim2.new(0, 0, 0, Layout.AbsoluteContentSize.Y)
+    end
+    Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateLayout)
+
+    local OptionButtons = {}
+
+    local function RefreshOptions()
+        for _, btn in pairs(OptionButtons) do btn:Destroy() end
+        OptionButtons = {}
+
+        for _, option in pairs(Options) do
+            local OptBtn = Instance.new("TextButton")
+            OptBtn.Parent = OptionContainer
+            OptBtn.Size = UDim2.new(1, 0, 0, 20)
+            OptBtn.BackgroundColor3 = Selected[option] and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(35, 35, 35)
+            OptBtn.Text = "  " .. tostring(option)
+            OptBtn.TextColor3 = Selected[option] and Color3.fromRGB(255, 0, 0) or Color_Text
+            OptBtn.TextXAlignment = Enum.TextXAlignment.Left
+            OptBtn.Font = Enum.Font.Gotham
+            OptBtn.TextSize = 11
+            Instance.new("UICorner", OptBtn).CornerRadius = UDim.new(0, 4)
+
+            OptBtn.MouseButton1Click:Connect(function()
+                Selected[option] = not Selected[option]
+                OptBtn.BackgroundColor3 = Selected[option] and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(35, 35, 35)
+                OptBtn.TextColor3 = Selected[option] and Color3.fromRGB(255, 0, 0) or Color_Text
                 
-                local dropped = false
+                local tbl = {}
+                for k, v in pairs(Selected) do if v then table.insert(tbl, k) end end
+                pcall(Callback, tbl)
+            end)
 
-                DropFrame.Parent = Page
-                DropFrame.BackgroundColor3 = Color_Sec
-                DropFrame.Size = UDim2.new(1, 0, 0, 32)
-                DropFrame.ClipsDescendants = true
-                DropFrame.ZIndex = 2
+            OptionButtons[option] = OptBtn
+        end
+    end
 
-                DropCorner.CornerRadius = UDim.new(0, 6)
-                DropCorner.Parent = DropFrame
-
-                DropButton.Parent = DropFrame
-                DropButton.BackgroundTransparency = 1
-                DropButton.Size = UDim2.new(1, 0, 0, 32)
-                DropButton.Text = ""
-
-                DropTitle.Parent = DropFrame
-                DropTitle.BackgroundTransparency = 1
-                DropTitle.Position = UDim2.new(0, 10, 0, 0)
-                DropTitle.Size = UDim2.new(1, -35, 0, 32)
-                DropTitle.Font = Enum.Font.Gotham
-                DropTitle.Text = text
-                DropTitle.TextColor3 = Color_Text
-                DropTitle.TextSize = 13
-                DropTitle.TextXAlignment = Enum.TextXAlignment.Left
-
-                DropArrow.Parent = DropFrame
-                DropArrow.BackgroundTransparency = 1
-                DropArrow.Position = UDim2.new(1, -25, 0, 8)
-                DropArrow.Size = UDim2.new(0, 16, 0, 16)
-                DropArrow.Image = "rbxassetid://6031091004"
-                DropArrow.ImageColor3 = Color_Accent
-
-                OptionHolder.Parent = DropFrame
-                OptionHolder.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-                OptionHolder.BorderSizePixel = 0
-                OptionHolder.Position = UDim2.new(0, 0, 0, 32)
-                OptionHolder.Size = UDim2.new(1, 0, 0, 0)
-
-                OptionList.Parent = OptionHolder
-                OptionList.SortOrder = Enum.SortOrder.LayoutOrder
-
-                local function RefreshOptions()
-                    for _, v in pairs(OptionHolder:GetChildren()) do
-                        if v:IsA("TextButton") then v:Destroy() end
-                    end
-                    
-                    for _, opt in pairs(options) do
-                        local OptBtn = Instance.new("TextButton")
-                        OptBtn.Parent = OptionHolder
-                        OptBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-                        OptBtn.Size = UDim2.new(1, 0, 0, 30)
-                        OptBtn.Font = Enum.Font.Gotham
-                        OptBtn.Text = opt
-                        OptBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
-                        OptBtn.TextSize = 13
-                        OptBtn.BorderSizePixel = 0
-                        
-                        OptBtn.MouseEnter:Connect(function()
-                            TweenService:Create(OptBtn, TweenInfo.new(0.2), {TextColor3 = Color_Accent}):Play()
-                        end)
-                        OptBtn.MouseLeave:Connect(function()
-                            TweenService:Create(OptBtn, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(200, 200, 200)}):Play()
-                        end)
-
-                        OptBtn.MouseButton1Click:Connect(function()
-                            DropTitle.Text = text .. ": " .. opt
-                            pcall(callback, opt)
-                            dropped = false
-                            TweenService:Create(DropFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 32)}):Play()
-                            TweenService:Create(DropArrow, TweenInfo.new(0.3), {Rotation = 0}):Play()
-                        end)
-                    end
-                end
-
-                RefreshOptions()
-
-                DropButton.MouseButton1Click:Connect(function()
-                    dropped = not dropped
-                    if dropped then
-                        local count = #options
-                        local contentSize = count * 30
-                        TweenService:Create(DropFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 32 + contentSize)}):Play()
-                        TweenService:Create(OptionHolder, TweenInfo.new(0.3), {Size = UDim2.new(1, 0, 0, contentSize)}):Play()
-                        TweenService:Create(DropArrow, TweenInfo.new(0.3), {Rotation = 180}):Play()
-                    else
-                        TweenService:Create(DropFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 32)}):Play()
-                        TweenService:Create(OptionHolder, TweenInfo.new(0.3), {Size = UDim2.new(1, 0, 0, 0)}):Play()
-                        TweenService:Create(DropArrow, TweenInfo.new(0.3), {Rotation = 0}):Play()
-                    end
-                end)
+    -- تصفية الخيارات عند الكتابة في البحث
+    SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
+        local text = SearchBox.Text:lower()
+        for opt, btn in pairs(OptionButtons) do
+            if text == "" or opt:lower():find(text) then
+                btn.Visible = true
+            else
+                btn.Visible = false
             end
+        end
+    end)
+
+    local open = false
+    click.MouseButton1Click:Connect(function()
+        open = not open
+        if open then
+            SearchBox.Visible = true
+            OptionContainer.Visible = true
+            TweenService:Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 155)}):Play()
+        else
+            TweenService:Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 25)}):Play()
+            task.wait(0.2)
+            SearchBox.Visible = false
+            OptionContainer.Visible = false
+        end
+    end)
+
+    RefreshOptions()
+    if Configs.Tooltip then Elements:Tooltip(Frame, Configs.Tooltip) end
+
+    return {
+        GetSelected = function()
+            local tbl = {}
+            for k, v in pairs(Selected) do if v then table.insert(tbl, k) end end
+            return tbl
+        end
+    }
+end
+
+function Elements:Tooltip(TargetFrame, Text)
+    local TooltipFrame = Instance.new("Frame")
+    local TooltipCorner = Instance.new("UICorner")
+    local TooltipLabel = Instance.new("TextLabel")
+
+    TooltipFrame.Parent = TargetFrame.Parent.Parent -- وضعه على الـ ScreenGui مباشرة
+    TooltipFrame.Size = UDim2.new(0, 120, 0, 20)
+    TooltipFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    TooltipFrame.BackgroundTransparency = 1
+    TooltipFrame.ZIndex = 100
+    TooltipFrame.Visible = false
+
+    TooltipCorner.CornerRadius = UDim.new(0, 4)
+    TooltipCorner.Parent = TooltipFrame
+
+    TooltipLabel.Parent = TooltipFrame
+    TooltipLabel.Size = UDim2.new(1, 0, 1, 0)
+    TooltipLabel.BackgroundTransparency = 1
+    TooltipLabel.Text = Text
+    TooltipLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
+    TooltipLabel.TextSize = 10
+    TooltipLabel.Font = Enum.Font.Gotham
+
+    TargetFrame.MouseEnter:Connect(function()
+        TooltipFrame.Visible = true
+        TweenService:Create(TooltipFrame, TweenInfo.new(0.15), {BackgroundTransparency = 0}):Play()
+    end)
+
+    TargetFrame.MouseMoved:Connect(function()
+        local MouseLoc = game:GetService("UserInputService"):GetMouseLocation()
+        TooltipFrame.Position = UDim2.new(0, MouseLoc.X + 15, 0, MouseLoc.Y - 25)
+    end)
+
+    TargetFrame.MouseLeave:Connect(function()
+        TweenService:Create(TooltipFrame, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play()
+        task.wait(0.15)
+        TooltipFrame.Visible = false
+    end)
+end
 
             function Elements:Paragraph(config)
                 local PFrame = Instance.new("Frame")
@@ -1265,7 +1346,94 @@ local Library = (function()
                 
                 return Lab
             end
+            
+            function Elements:Keybind(Configs)
+    local name = Configs.Title or "Keybind"
+    local Default = Configs.Default or Enum.KeyCode.E
+    local Callback = Configs.Callback or function() end
 
+    local CurrentKey = Default
+    local WhitelistedKeys = {
+        [Enum.KeyCode.W] = true, [Enum.KeyCode.A] = true, 
+        [Enum.KeyCode.S] = true, [Enum.KeyCode.D] = true,
+        [Enum.KeyCode.Slash] = true, [Enum.KeyCode.Tab] = true
+    }
+
+    local BindFrame = Instance.new("Frame")
+    local BindCorner = Instance.new("UICorner")
+    local BindStroke = Instance.new("UIStroke")
+    
+    BindFrame.Parent = Page
+    BindFrame.Size = UDim2.new(1, 0, 0, 25)
+    BindFrame.BackgroundColor3 = Color_Sec
+
+    BindCorner.CornerRadius = UDim.new(0, 6)
+    BindCorner.Parent = BindFrame
+
+    BindStroke.Color = Color3.fromRGB(45, 45, 45)
+    BindStroke.Thickness = 1
+    BindStroke.Parent = BindFrame
+
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Parent = BindFrame
+    TextLabel.Size = UDim2.new(1, -10, 1, 0)
+    TextLabel.Position = UDim2.new(0, 10, 0, 0)
+    TextLabel.TextSize = 12
+    TextLabel.TextColor3 = Color_Text
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    TextLabel.Text = name
+    TextLabel.Font = Enum.Font.Gotham
+    TextLabel.BackgroundTransparency = 1
+
+    local BindBtn = Instance.new("TextButton")
+    local BtnCorner = Instance.new("UICorner")
+    
+    BindBtn.Parent = BindFrame
+    BindBtn.Size = UDim2.new(0, 70, 0, 18)
+    BindBtn.Position = UDim2.new(1, -75, 0, 3.5)
+    BindBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    BindBtn.Font = Enum.Font.GothamBold
+    BindBtn.Text = CurrentKey.Name
+    BindBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+    BindBtn.TextSize = 10
+
+    BtnCorner.CornerRadius = UDim.new(0, 4)
+    BtnCorner.Parent = BindBtn
+
+    local Listening = false
+
+    BindBtn.MouseButton1Click:Connect(function()
+        if Listening then return end
+        Listening = true
+        BindBtn.Text = "..."
+        BindBtn.TextColor3 = Color3.fromRGB(255, 0, 0)
+    end)
+
+    game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
+        if gpe then return end
+        if Listening and input.UserInputType == Enum.UserInputType.Keyboard then
+            if not WhitelistedKeys[input.KeyCode] then
+                CurrentKey = input.KeyCode
+                BindBtn.Text = CurrentKey.Name
+            end
+            Listening = false
+            BindBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+        elseif input.KeyCode == CurrentKey then
+            pcall(Callback, CurrentKey)
+        end
+    end)
+
+    if Configs.Tooltip then
+        Elements:Tooltip(BindFrame, Configs.Tooltip)
+    end
+
+    return {
+        Set = function(newKey)
+            CurrentKey = newKey
+            BindBtn.Text = CurrentKey.Name
+        end
+    }
+end
     function Elements:ColorPicker(Configs)
     local name = Configs.Title or "Color Picker"
     local Default = Configs.Default or Color3.fromRGB(255, 0, 0)
@@ -1555,7 +1723,6 @@ local Library = (function()
     updcolorpicker()
     return picker
 end
-
 
 
             return Elements
