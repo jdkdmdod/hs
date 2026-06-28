@@ -850,7 +850,7 @@ function Elements:Button(text, callback)
     FrameCorner.Parent = Frame
     
     local FrameStroke = Instance.new("UIStroke")
-    FrameStroke.Color = Color_Border
+    FrameStroke.Color = Color_Accent
     FrameStroke.Thickness = 1
     FrameStroke.Parent = Frame
     
