@@ -1300,29 +1300,36 @@ end
                 PText.TextWrapped = true
             end
         
-            function Elements:Label(text)
-    local LabelFrame = Instance.new("Frame")
-    local Lab = Instance.new("TextLabel")
+    function Elements:Label(text)
+    local Seperator = Instance.new("Frame")
+    local Sep1 = Instance.new("Frame")
+    local Sep2 = Instance.new("TextLabel")
+    local Sep3 = Instance.new("Frame")
     
-    LabelFrame.Name = "LabelFrame"
-    LabelFrame.Parent = Page
-    LabelFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    LabelFrame.BackgroundTransparency = 1.000
-    LabelFrame.Size = UDim2.new(0, 470, 0, 28)
+    Seperator.Parent = Page
+    Seperator.BackgroundTransparency = 1
+    Seperator.Size = UDim2.new(1, 0, 0, 20)
     
-    Lab.Name = "Lab"
-    Lab.Parent = LabelFrame
-    Lab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Lab.BackgroundTransparency = 1.000
-    Lab.Position = UDim2.new(0, 0, 0, 0)
-    Lab.Size = UDim2.new(0, 470, 0, 28)
-    Lab.Font = Enum.Font.GothamSemibold
-    Lab.Text = text
-    Lab.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Lab.TextSize = 13.000
-    Lab.TextXAlignment = Enum.TextXAlignment.Center
-
-    return LabelFrame
+    Sep1.Parent = Seperator
+    Sep1.BackgroundColor3 = Color_Accent
+    Sep1.BorderSizePixel = 0
+    Sep1.Position = UDim2.new(0, 0, 0, 10)
+    Sep1.Size = UDim2.new(0, 80, 0, 1)
+    
+    Sep2.Parent = Seperator
+    Sep2.BackgroundTransparency = 1
+    Sep2.Position = UDim2.new(0.5, -50, 0, 0)
+    Sep2.Size = UDim2.new(0, 100, 0, 20)
+    Sep2.Font = Enum.Font.GothamSemibold
+    Sep2.Text = text
+    Sep2.TextColor3 = Color_TextDim
+    Sep2.TextSize = 13
+    
+    Sep3.Parent = Seperator
+    Sep3.BackgroundColor3 = Color_Accent
+    Sep3.BorderSizePixel = 0
+    Sep3.Position = UDim2.new(1, -80, 0, 10)
+    Sep3.Size = UDim2.new(0, 80, 0, 1)
 end
 
             
