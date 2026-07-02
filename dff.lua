@@ -15,7 +15,7 @@ local Library = (function()
 
     local Lib = {}
 
-    local Color_Accent = Color3.fromRGB(255, 5, 5)
+    local Color_Accent = Color3.fromRGB(20, 20, 20)
     local Color_Main   = Color3.fromRGB(15, 15, 15)
     local Color_Sec    = Color3.fromRGB(25, 25, 25)
     local Color_Text   = Color3.fromRGB(255, 255, 255)
