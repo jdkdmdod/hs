@@ -512,7 +512,7 @@ local Library = (function()
 
         TabsContainer.Parent = TabsFrame
         TabsContainer.BackgroundTransparency = 1
-        TabsContainer.Size = UDim2.new(1, 0, 1, -55) -- Adjusted to leave space for the profile layout card
+        TabsContainer.Size = UDim2.new(1, 0, 1, -55) 
         TabsContainer.ScrollBarThickness = 0
 
         TabsList.Parent = TabsContainer
@@ -523,7 +523,6 @@ local Library = (function()
         TabsPad.Parent = TabsContainer
         TabsPad.PaddingTop = UDim.new(0, 10)
 
-        -- Integrated English Profile Card Feature
         local UserCard = Instance.new("Frame")
         local CardCorner = Instance.new("UICorner")
         local UserAvatar = Instance.new("ImageLabel")
@@ -1231,7 +1230,7 @@ function Elements:Tooltip(TargetFrame, Text)
     local TooltipCorner = Instance.new("UICorner")
     local TooltipLabel = Instance.new("TextLabel")
 
-    TooltipFrame.Parent = TargetFrame.Parent.Parent -- وضعه على الـ ScreenGui مباشرة
+    TooltipFrame.Parent = TargetFrame.Parent.Parent
     TooltipFrame.Size = UDim2.new(0, 120, 0, 20)
     TooltipFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     TooltipFrame.BackgroundTransparency = 1
@@ -1302,34 +1301,30 @@ end
             end
         
             function Elements:Label(text)
-                local Lab = Instance.new("TextLabel")
-                local LabCorner = Instance.new("UICorner")
-                local LabStroke = Instance.new("UIStroke")
-                
-                Lab.Parent = Page 
-                Lab.BackgroundColor3 = Color_Sec
-                Lab.Size = UDim2.new(1, 0, 0, 28)
-                Lab.Font = Enum.Font.Gotham
-                Lab.Text = text
-                Lab.TextColor3 = Color_Text
-                Lab.TextSize = 13
+    local LabelFrame = Instance.new("Frame")
+    local Lab = Instance.new("TextLabel")
+    
+    LabelFrame.Name = "LabelFrame"
+    LabelFrame.Parent = Page
+    LabelFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    LabelFrame.BackgroundTransparency = 1.000
+    LabelFrame.Size = UDim2.new(0, 470, 0, 28)
+    
+    Lab.Name = "Lab"
+    Lab.Parent = LabelFrame
+    Lab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Lab.BackgroundTransparency = 1.000
+    Lab.Position = UDim2.new(0, 0, 0, 0)
+    Lab.Size = UDim2.new(0, 470, 0, 28)
+    Lab.Font = Enum.Font.GothamSemibold
+    Lab.Text = text
+    Lab.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Lab.TextSize = 13.000
+    Lab.TextXAlignment = Enum.TextXAlignment.Center
 
-                LabCorner.CornerRadius = UDim.new(0, 6)
-                LabCorner.Parent = Lab
+    return LabelFrame
+end
 
-                LabStroke.Parent = Lab
-                LabStroke.Thickness = 1
-                LabStroke.Color = Color3.fromRGB(152, 17, 242)
-                LabStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                
-                return Lab
-            end
-
-            function Elements:setLabel(labelObject, newText)
-                if labelObject and labelObject:IsA("TextLabel") then
-                    labelObject.Text = newText
-                end
-            end
             
             function Elements:State(text)
                 local Lab = Instance.new("TextLabel")
@@ -1500,7 +1495,6 @@ end
     pickerStroke.Thickness = 1
     pickerStroke.Parent = picker
 
-    -- [تعديل] زر الـ Rainbow بدون أي UIStroke
     local RainbowToggle = Instance.new("TextButton")
     local RainbowToggleCorner = Instance.new("UICorner")
     
@@ -1633,7 +1627,6 @@ end
     local IsRainbow = false
     local RainbowConnection = nil
 
-    -- [تعديل] تحديث الألوان عند التفعيل والإيقاف دون استدعاء Stroke
     local function ToggleRainbow(State)
         IsRainbow = State
         if IsRainbow then
