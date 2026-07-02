@@ -372,7 +372,7 @@ local Library = (function()
         Main.ClipsDescendants = true
 
         local isOpen = false
-        local fullSize = UDim2.new(0, 470, 0, 283)
+        local fullSize = UDim2.new(0, 586, 0, 338)
 
         ToggleBtn.MouseButton1Click:Connect(function()
             isOpen = not isOpen
