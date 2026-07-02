@@ -372,7 +372,7 @@ local Library = (function()
         Main.ClipsDescendants = true
 
         local isOpen = false
-        local fullSize = UDim2.new(0, 470, 0, 283)
+        local fullSize = UDim2.new(0, 586, 0, 338)
 
         ToggleBtn.MouseButton1Click:Connect(function()
             isOpen = not isOpen
@@ -834,59 +834,6 @@ function Elements:Button(text, callback)
                 end)
             end
             
-            function Elements:ImageLabel(Configs)
-    local LabelName = Configs.Name or ""
-    local LabelImage = Configs.Image or "rbxassetid://0"
-    
-    local Frame = Instance.new("Frame")
-    Frame.Parent = Page
-    Frame.Size = UDim2.new(0, 95, 0, 110)
-    Frame.BackgroundColor3 = Color_Sec
-    Frame.Name = "Frame"
-    Frame.BorderSizePixel = 0
-    
-    local FrameCorner = Instance.new("UICorner")
-    FrameCorner.CornerRadius = UDim.new(0, 6)
-    FrameCorner.Parent = Frame
-    
-    local FrameStroke = Instance.new("UIStroke")
-    FrameStroke.Color = Color_Accent
-    FrameStroke.Thickness = 1
-    FrameStroke.Parent = Frame
-    
-    local TextButton = Instance.new("TextButton")
-    TextButton.Parent = Frame
-    TextButton.Size = UDim2.new(1, 0, 0, 25)
-    TextButton.Position = UDim2.new(0, 0, 1, -25)
-    TextButton.BackgroundTransparency = 1
-    TextButton.Font = Enum.Font.Gotham
-    TextButton.Text = LabelName
-    TextButton.TextColor3 = Color_Text
-    TextButton.TextSize = 12
-    TextButton.TextWrapped = true
-    
-    local ImageLabel = Instance.new("ImageLabel")
-    ImageLabel.Parent = Frame
-    ImageLabel.Size = UDim2.new(0, 75, 0, 75)
-    ImageLabel.Position = UDim2.new(0.5, -37.5, 0, 5)
-    ImageLabel.BackgroundTransparency = 1
-    ImageLabel.Image = LabelImage
-    ImageLabel.ScaleType = Enum.ScaleType.Fit
-    
-    return {
-        Image = ImageLabel,
-        SetImage = function(self, NewImage)
-            self.Image.Image = NewImage
-        end,
-        SetName = function(self, NewName)
-            TextButton.Text = NewName
-        end,
-        Destroy = function(self)
-            Frame:Destroy()
-        end
-    }
-end
-
             function Elements:Discord(data)
                 local DiscordFrame = Instance.new("Frame")
                 DiscordFrame.Parent = Page
