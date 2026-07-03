@@ -172,6 +172,9 @@ local Library = (function()
         local KeySuccess = Configs.Key.Notifi.CorrectKey or "Running the Script..."
         local KeyCopyKeyLink = Configs.Key.Notifi.CopyKeyLink or "Copied to Clipboard"
 
+        -- ضع هنا رابط أو ID الصورة الخاصة بـ HexHubX
+        local IconImageID = "rbxassetid://YOUR_IMAGE_ID_HERE" 
+
         local ScreenGui = Instance.new("ScreenGui")
         ScreenGui.Name = "HexHubX"
         ScreenGui.Parent = game:GetService("CoreGui")
@@ -185,6 +188,7 @@ local Library = (function()
             local KeyMenuStroke = Instance.new("UIStroke")
             local CloseButton = Instance.new("TextButton")
             local CloseCorner = Instance.new("UICorner")
+            local TitleIcon = Instance.new("ImageLabel") -- عنصر الصورة الجديد
             local KTitle = Instance.new("TextLabel")
             local Description = Instance.new("TextLabel")
             local ConfirmButton = Instance.new("TextButton")
@@ -223,9 +227,18 @@ local Library = (function()
             CloseCorner.CornerRadius = UDim.new(0, 6)
             CloseCorner.Parent = CloseButton
 
+            -- إعدادات أيقونة الصورة بجانب العنوان
+            TitleIcon.Name = "TitleIcon"
+            TitleIcon.Parent = KeyMenu
+            TitleIcon.Size = UDim2.new(0, 24, 0, 24) -- حجم الأيقونة التابع للعنوان
+            TitleIcon.Position = UDim2.new(0, 20, 0, 13) -- موقعها بالزاوية اليسرى العليا
+            TitleIcon.Image = IconImageID
+            TitleIcon.BackgroundTransparency = 1
+            TitleIcon.BorderSizePixel = 0
+
             KTitle.Parent = KeyMenu
-            KTitle.Size = UDim2.new(1, -80, 0, 30)
-            KTitle.Position = UDim2.new(0, 20, 0, 10)
+            KTitle.Size = UDim2.new(1, -110, 0, 30)
+            KTitle.Position = UDim2.new(0, 50, 0, 10) -- تم تحريك النص لتبدأ من بعد الأيقونة (50 بكسل)
             KTitle.Text = KeyTitle
             KTitle.Font = Enum.Font.GothamBold
             KTitle.TextSize = 16
