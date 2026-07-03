@@ -172,8 +172,7 @@ local Library = (function()
         local KeySuccess = Configs.Key.Notifi.CorrectKey or "Running the Script..."
         local KeyCopyKeyLink = Configs.Key.Notifi.CopyKeyLink or "Copied to Clipboard"
 
-        -- ضع هنا رابط أو ID الصورة الخاصة بـ HexHubX
-        local IconImageID = "rbxassetid://YOUR_IMAGE_ID_HERE" 
+        local IconImageID = "rbxassetid://111096621623807" 
 
         local ScreenGui = Instance.new("ScreenGui")
         ScreenGui.Name = "HexHubX"
@@ -443,10 +442,11 @@ local Library = (function()
             end
         end)
 
-        local Top = Instance.new("Frame")
+                local Top = Instance.new("Frame")
         local Line = Instance.new("Frame")
         local GameTitle = Instance.new("TextLabel")
         local CloseBtn = Instance.new("TextButton")
+        local TopIcon = Instance.new("ImageLabel")
 
         Top.Name = "Top"
         Top.Parent = Main
@@ -482,6 +482,20 @@ local Library = (function()
         GameTitle.TextSize = 15
         GameTitle.TextXAlignment = Enum.TextXAlignment.Left
 
+        TopIcon.Name = "TopIcon"
+        TopIcon.Parent = Top
+        TopIcon.BackgroundTransparency = 1
+        TopIcon.BorderSizePixel = 0
+        TopIcon.Size = UDim2.new(0, 20, 0, 20)
+        TopIcon.AnchorPoint = Vector2.new(0, 0.5)
+        
+        TopIcon.Position = UDim2.new(0, GameTitle.Position.X.Offset + GameTitle.TextBounds.X + 8, 0.5, 0)
+        TopIcon.Image = IconImageID or "rbxassetid://111096621623807"
+
+        GameTitle:GetPropertyChangedSignal("TextBounds"):Connect(function()
+            TopIcon.Position = UDim2.new(0, GameTitle.Position.X.Offset + GameTitle.TextBounds.X + 8, 0.5, 0)
+        end)
+
         CloseBtn.Parent = Top
         CloseBtn.BackgroundTransparency = 1
         CloseBtn.Position = UDim2.new(1, -30, 0, 0)
@@ -499,6 +513,7 @@ local Library = (function()
             closeTween.Completed:Wait()
             Main.Visible = false
         end)
+
 
         local TabsFrame = Instance.new("Frame")
         local TabsContainer = Instance.new("ScrollingFrame")
