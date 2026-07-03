@@ -187,7 +187,7 @@ local Library = (function()
             local KeyMenuStroke = Instance.new("UIStroke")
             local CloseButton = Instance.new("TextButton")
             local CloseCorner = Instance.new("UICorner")
-            local TitleIcon = Instance.new("ImageLabel") -- عنصر الصورة الجديد
+            local TitleIcon = Instance.new("ImageLabel")
             local KTitle = Instance.new("TextLabel")
             local Description = Instance.new("TextLabel")
             local ConfirmButton = Instance.new("TextButton")
@@ -226,18 +226,17 @@ local Library = (function()
             CloseCorner.CornerRadius = UDim.new(0, 6)
             CloseCorner.Parent = CloseButton
 
-            -- إعدادات أيقونة الصورة بجانب العنوان
             TitleIcon.Name = "TitleIcon"
             TitleIcon.Parent = KeyMenu
-            TitleIcon.Size = UDim2.new(0, 24, 0, 24) -- حجم الأيقونة التابع للعنوان
-            TitleIcon.Position = UDim2.new(0, 20, 0, 13) -- موقعها بالزاوية اليسرى العليا
+            TitleIcon.Size = UDim2.new(0, 24, 0, 24) 
+            TitleIcon.Position = UDim2.new(0, 20, 0, 13) 
             TitleIcon.Image = IconImageID
             TitleIcon.BackgroundTransparency = 1
             TitleIcon.BorderSizePixel = 0
 
             KTitle.Parent = KeyMenu
             KTitle.Size = UDim2.new(1, -110, 0, 30)
-            KTitle.Position = UDim2.new(0, 50, 0, 10) -- تم تحريك النص لتبدأ من بعد الأيقونة (50 بكسل)
+            KTitle.Position = UDim2.new(0, 50, 0, 10) 
             KTitle.Text = KeyTitle
             KTitle.Font = Enum.Font.GothamBold
             KTitle.TextSize = 16
@@ -384,7 +383,7 @@ local Library = (function()
         Main.ClipsDescendants = true
 
         local isOpen = false
-        local fullSize = UDim2.new(0, 586, 0, 338)
+        local fullSize = UDim2.new(0, 497, 0, 314)
 
         ToggleBtn.MouseButton1Click:Connect(function()
             isOpen = not isOpen
