@@ -701,53 +701,92 @@ function Library:NewWindow(ConfigWindow)
 			local SectionFunc = {}
 			
 			function SectionFunc:AddDiscord(cfdiscord)
-				local cfdiscord = Library:MakeConfig({
-					Image = "rbxassetid://", 
-					Callback = function() end
-				}, cfdiscord or {})
+    local cfdiscord = Library:MakeConfig({
+        Image = "rbxassetid://",
+        Link = "",
+        Callback = function() end
+    }, cfdiscord or {})
 
-				local DiscordFrame = Instance.new("Frame")
-				local UICorner_Disc = Instance.new("UICorner")
-				local DiscLogo = Instance.new("ImageLabel")
-				local JoinBtn = Instance.new("TextButton")
-				local UICorner_Btn = Instance.new("UICorner")
+    local DiscordFrame = Instance.new("Frame")
+    local UICorner_Disc = Instance.new("UICorner")
+    local DiscLogo = Instance.new("ImageLabel")
+    local DiscLogoCorner = Instance.new("UICorner")
+    local JoinBtn = Instance.new("TextButton")
+    local UICorner_Btn = Instance.new("UICorner")
 
-				DiscordFrame.Name = "DiscordFrame"
-				DiscordFrame.Parent = SectionList
-				DiscordFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
-				DiscordFrame.BackgroundTransparency = 0.950
-				DiscordFrame.Size = UDim2.new(1, 0, 0, 50)
+    DiscordFrame.Name = "DiscordFrame"
+    DiscordFrame.Parent = SectionList
+    DiscordFrame.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+    DiscordFrame.BackgroundTransparency = 0.950
+    DiscordFrame.Size = UDim2.new(1, 0, 0, 110)
 
-				UICorner_Disc.CornerRadius = UDim.new(0, 4)
-				UICorner_Disc.Parent = DiscordFrame
+    UICorner_Disc.CornerRadius = UDim.new(0, 6)
+    UICorner_Disc.Parent = DiscordFrame
 
-				DiscLogo.Name = "DiscLogo"
-				DiscLogo.Parent = DiscordFrame
-				DiscLogo.AnchorPoint = Vector2.new(0, 0.5)
-				DiscLogo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				DiscLogo.BackgroundTransparency = 1.000
-				DiscLogo.Position = UDim2.new(0, 10, 0.5, 0)
-				DiscLogo.Size = UDim2.new(0, 35, 0, 35)
-				DiscLogo.Image = cfdiscord.Image
+    DiscLogo.Name = "DiscLogo"
+    DiscLogo.Parent = DiscordFrame
+    DiscLogo.Size = UDim2.new(0, 45, 0, 45)
+    DiscLogo.Position = UDim2.new(0, 12, 0, 12)
+    DiscLogo.BackgroundTransparency = 1.000
+    DiscLogo.Image = cfdiscord.Image or "rbxassetid://10723424838"
+    DiscLogo.ZIndex = 2
 
-				JoinBtn.Name = "JoinBtn"
-				JoinBtn.Parent = DiscordFrame
-				JoinBtn.AnchorPoint = Vector2.new(1, 0.5)
-				JoinBtn.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
-				JoinBtn.Position = UDim2.new(1, -10, 0.5, 0)
-				JoinBtn.Size = UDim2.new(0, 80, 0, 30)
-				JoinBtn.Font = Enum.Font.GothamBold
-				JoinBtn.Text = "Join"
-				JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-				JoinBtn.TextSize = 14.000
+    DiscLogoCorner.CornerRadius = UDim.new(0, 8)
+    DiscLogoCorner.Parent = DiscLogo
 
-				UICorner_Btn.CornerRadius = UDim.new(0, 4)
-				UICorner_Btn.Parent = JoinBtn
+    JoinBtn.Name = "JoinBtn"
+    JoinBtn.Parent = DiscordFrame
+    JoinBtn.Size = UDim2.new(1, -24, 0, 32)
+    JoinBtn.AnchorPoint = Vector2.new(0.5, 1)
+    JoinBtn.Position = UDim2.new(0.5, 0, 1, -8)
+    JoinBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+    JoinBtn.Text = "Join"
+    JoinBtn.TextColor3 = Color3.fromRGB(220, 220, 220)
+    JoinBtn.Font = Enum.Font.GothamBold
+    JoinBtn.TextSize = 14
+    JoinBtn.BorderSizePixel = 0
+    JoinBtn.AutoButtonColor = false
 
-				JoinBtn.Activated:Connect(function()
-					cfdiscord.Callback()
-				end)
-			end
+    UICorner_Btn.CornerRadius = UDim.new(0, 5)
+    UICorner_Btn.Parent = JoinBtn
+
+    local clickTime = tick()
+    local clickCount = 0
+
+    JoinBtn.MouseEnter:Connect(function()
+        if JoinBtn.Text ~= "Copied to Clipboard" then
+            TweenService:Create(JoinBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(60, 220, 60)}):Play()
+        end
+    end)
+
+    JoinBtn.MouseLeave:Connect(function()
+        if JoinBtn.Text ~= "Copied to Clipboard" then
+            TweenService:Create(JoinBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 200, 50)}):Play()
+        end
+    end)
+
+    JoinBtn.MouseButton1Click:Connect(function()
+        if clickCount == 0 or tick() - clickTime > 5 then
+            clickTime = tick()
+            clickCount = clickCount + 1
+            
+            cfdiscord.Callback()
+            if setclipboard then
+                setclipboard(cfdiscord.Link or "")
+            end
+            
+            JoinBtn.Text = "Copied to Clipboard"
+            JoinBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+            JoinBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+            
+            task.wait(5)
+            JoinBtn.Text = "Join"
+            JoinBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+            JoinBtn.TextColor3 = Color3.fromRGB(220, 220, 220)
+        end
+    end)
+end
+
 
 			function SectionFunc:AddToggle(cftoggle)
 				local cftoggle = Library:MakeConfig({
