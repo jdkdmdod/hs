@@ -1378,7 +1378,7 @@ end
     Sep3.Position = UDim2.new(1, -80, 0, 10)
     Sep3.Size = UDim2.new(0, 80, 0, 1)
 end
-            function Elements:ImageLabel(Configs)
+ function Elements:ImageLabel(Configs)
     local LabelName = Configs.Name or ""
     local LabelImage = Configs.Image or "rbxassetid://0"
     
@@ -1431,10 +1431,11 @@ end
     }
 end 
 function Elements:Video(Configs)
-    local VideoName = Configs.Name or "video"
+    local LabelName = Configs.Name or "Video"
     local VideoLink = Configs.Video or "https://raw.githubusercontent.com/jdkdmdod/hs/refs/heads/main/HexHubX2_vid.webm"
     local Loop = Configs.Loop or true
-    local Size = Configs.Size or UDim2.new(1, 0, 1, 0)
+    
+    local VideoName = LabelName:gsub("%s+", "_")
     
     local success, content = pcall(readfile, VideoName .. ".webm")
     if not success then
@@ -1445,39 +1446,58 @@ function Elements:Video(Configs)
     local cloneref = cloneref or function(o) return o end
     local coregui = cloneref(game:GetService("CoreGui"))
     
-    local vid = Instance.new("ScreenGui", coregui)
-    vid.Name = "VideoGui"
-    vid.Enabled = true
-    vid.IgnoreGuiInset = true
-    vid.ResetOnSpawn = false
-    vid.DisplayOrder = 0
+    local Frame = Instance.new("Frame")
+    Frame.Parent = Page
+    Frame.Size = UDim2.new(0, 95, 0, 110)
+    Frame.BackgroundColor3 = Color_Sec
+    Frame.Name = "Frame"
+    Frame.BorderSizePixel = 0
+    Frame.ClipsDescendants = true
     
-    local actual = Instance.new("VideoFrame", vid)
-    actual.Name = "video"
-    actual.BackgroundTransparency = 1
-    actual.Size = Size
-    actual.Visible = true
-    actual.Position = UDim2.new(0, 0, 0, 0)
-    actual.Playing = true
-    actual.Looped = Loop
-    actual.Video = getcustomasset(VideoName .. ".webm")
+    local FrameCorner = Instance.new("UICorner")
+    FrameCorner.CornerRadius = UDim.new(0, 6)
+    FrameCorner.Parent = Frame
+    
+    local FrameStroke = Instance.new("UIStroke")
+    FrameStroke.Color = Color3.fromRGB(45, 45, 45)
+    FrameStroke.Thickness = 1
+    FrameStroke.Parent = Frame
+    
+    local TextButton = Instance.new("TextButton")
+    TextButton.Parent = Frame
+    TextButton.Size = UDim2.new(1, 0, 0, 25)
+    TextButton.Position = UDim2.new(0, 0, 1, -25)
+    TextButton.BackgroundTransparency = 1
+    TextButton.Font = Enum.Font.Gotham
+    TextButton.Text = LabelName
+    TextButton.TextColor3 = Color_Text
+    TextButton.TextSize = 12
+    TextButton.TextWrapped = true
+    
+    local vid = Instance.new("VideoFrame")
+    vid.Name = "VideoFrame"
+    vid.Parent = Frame
+    vid.Size = UDim2.new(0, 75, 0, 75)
+    vid.Position = UDim2.new(0.5, -37.5, 0, 5)
+    vid.BackgroundTransparency = 1
+    vid.Visible = true
+    vid.Playing = true
+    vid.Looped = Loop
+    vid.Video = getcustomasset(VideoName .. ".webm")
     
     return {
+        Video = vid,
         Play = function(self)
-            actual.Playing = true
+            self.Video.Playing = true
         end,
         Pause = function(self)
-            actual.Playing = false
+            self.Video.Playing = false
         end,
         Stop = function(self)
-            actual:Destroy()
-            vid:Destroy()
+            Frame:Destroy()
         end,
         SetLoop = function(self, state)
-            actual.Looped = state
-        end,
-        SetSize = function(self, newSize)
-            actual.Size = newSize
+            self.Video.Looped = state
         end
     }
 end
