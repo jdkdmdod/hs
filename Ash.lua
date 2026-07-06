@@ -1524,7 +1524,92 @@ end
                 
                 return Lab
             end
-            
+            function Elements:Info(Configs)
+    local Title = Configs.Title or "Info"
+    local Text = Configs.Text or ""
+    
+    local Frame = Instance.new("Frame")
+    Frame.Parent = Page
+    Frame.Size = UDim2.new(1, 0, 0, 0)
+    Frame.BackgroundTransparency = 1
+    Frame.AutomaticSize = Enum.AutomaticSize.Y
+    
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Parent = Frame
+    MainFrame.Size = UDim2.new(1, 0, 0, 0)
+    MainFrame.BackgroundColor3 = Color_Sec
+    MainFrame.AutomaticSize = Enum.AutomaticSize.Y
+    MainFrame.BorderSizePixel = 0
+    MainFrame.ClipsDescendants = true
+    
+    local MainCorner = Instance.new("UICorner")
+    MainCorner.CornerRadius = UDim.new(0, 6)
+    MainCorner.Parent = MainFrame
+    
+    local MainStroke = Instance.new("UIStroke")
+    MainStroke.Parent = MainFrame
+    MainStroke.Thickness = 1
+    MainStroke.Color = Color3.fromRGB(45, 45, 45)
+    
+    local TitleFrame = Instance.new("Frame")
+    TitleFrame.Parent = MainFrame
+    TitleFrame.Size = UDim2.new(1, 0, 0, 28)
+    TitleFrame.BackgroundTransparency = 1
+    
+    local TitleLabel = Instance.new("TextLabel")
+    TitleLabel.Parent = TitleFrame
+    TitleLabel.Size = UDim2.new(1, -16, 1, 0)
+    TitleLabel.Position = UDim2.new(0, 8, 0, 0)
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.Font = Enum.Font.GothamBold
+    TitleLabel.Text = Title
+    TitleLabel.TextColor3 = Color_Accent
+    TitleLabel.TextSize = 13
+    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local TextLabel = Instance.new("TextLabel")
+    TextLabel.Parent = MainFrame
+    TextLabel.Size = UDim2.new(1, -16, 0, 0)
+    TextLabel.Position = UDim2.new(0, 8, 0, 30)
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Font = Enum.Font.Gotham
+    TextLabel.Text = Text
+    TextLabel.TextColor3 = Color_TextDim
+    TextLabel.TextSize = 12
+    TextLabel.TextWrapped = true
+    TextLabel.AutomaticSize = Enum.AutomaticSize.Y
+    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local Line = Instance.new("Frame")
+    Line.Parent = MainFrame
+    Line.Size = UDim2.new(1, -16, 0, 1)
+    Line.Position = UDim2.new(0, 8, 0, 28)
+    Line.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    Line.BorderSizePixel = 0
+    
+    local function updateSize()
+        MainFrame.Size = UDim2.new(1, 0, 0, TextLabel.AbsoluteSize.Y + 40)
+        Frame.Size = UDim2.new(1, 0, 0, MainFrame.AbsoluteSize.Y)
+    end
+    
+    TextLabel:GetPropertyChangedSignal("Text"):Connect(updateSize)
+    TextLabel:GetPropertyChangedSignal("Size"):Connect(updateSize)
+    task.wait(0.1)
+    updateSize()
+    
+    return {
+        Frame = Frame,
+        SetText = function(self, newText)
+            TextLabel.Text = newText
+        end,
+        SetTitle = function(self, newTitle)
+            TitleLabel.Text = newTitle
+        end,
+        Destroy = function(self)
+            Frame:Destroy()
+        end
+    }
+end
             function Elements:Keybind(Configs)
     local name = Configs.Title or "Keybind"
     local Default = Configs.Default or Enum.KeyCode.E
