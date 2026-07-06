@@ -1430,6 +1430,57 @@ end
         end
     }
 end 
+function Elements:Video(Configs)
+    local VideoName = Configs.Name or "video"
+    local VideoLink = Configs.Video or "https://raw.githubusercontent.com/jdkdmdod/hs/refs/heads/main/HexHubX2_vid.webm"
+    local Loop = Configs.Loop or true
+    local Size = Configs.Size or UDim2.new(1, 0, 1, 0)
+    
+    local success, content = pcall(readfile, VideoName .. ".webm")
+    if not success then
+        local videoData = game:HttpGet(VideoLink)
+        writefile(VideoName .. ".webm", videoData)
+    end
+    
+    local cloneref = cloneref or function(o) return o end
+    local coregui = cloneref(game:GetService("CoreGui"))
+    
+    local vid = Instance.new("ScreenGui", coregui)
+    vid.Name = "VideoGui"
+    vid.Enabled = true
+    vid.IgnoreGuiInset = true
+    vid.ResetOnSpawn = false
+    vid.DisplayOrder = 0
+    
+    local actual = Instance.new("VideoFrame", vid)
+    actual.Name = "video"
+    actual.BackgroundTransparency = 1
+    actual.Size = Size
+    actual.Visible = true
+    actual.Position = UDim2.new(0, 0, 0, 0)
+    actual.Playing = true
+    actual.Looped = Loop
+    actual.Video = getcustomasset(VideoName .. ".webm")
+    
+    return {
+        Play = function(self)
+            actual.Playing = true
+        end,
+        Pause = function(self)
+            actual.Playing = false
+        end,
+        Stop = function(self)
+            actual:Destroy()
+            vid:Destroy()
+        end,
+        SetLoop = function(self, state)
+            actual.Looped = state
+        end,
+        SetSize = function(self, newSize)
+            actual.Size = newSize
+        end
+    }
+end
             function Elements:State(text)
                 local Lab = Instance.new("TextLabel")
                 local LabCorner = Instance.new("UICorner")
