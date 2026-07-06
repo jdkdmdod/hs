@@ -860,52 +860,6 @@ function Elements:Button(text, callback)
                 end)
             end
             
-            function Elements:AddImageLabel(Configs)
-    local LabelName = Configs[1] or Configs.Name or ""
-    local LabelImage = Configs[2] or Configs.Image or ""
-    
-    local Frame = Instance.new("Frame")
-    local FrameCorner = Instance.new("UICorner")
-    local FrameStroke = Instance.new("UIStroke")
-    local TextButton = Instance.new("TextButton")
-    local ImageLabel = Instance.new("ImageLabel")
-    
-    Frame.Parent = Page
-    Frame.Size = UDim2.new(0, 95, 0, 110)
-    Frame.BackgroundColor3 = Color_Sec
-    Frame.Name = "ImageLabelFrame"
-    Frame.BorderSizePixel = 0
-    
-    FrameCorner.CornerRadius = UDim.new(0, 6)
-    FrameCorner.Parent = Frame
-    
-    FrameStroke.Parent = Frame
-    FrameStroke.Thickness = 1
-    FrameStroke.Color = Color_Sec
-    FrameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    
-    TextButton.Parent = Frame
-    TextButton.TextSize = 12
-    TextButton.TextColor3 = Color_Text
-    TextButton.Text = LabelName
-    TextButton.Size = UDim2.new(1, 0, 0, 25)
-    TextButton.BackgroundTransparency = 1
-    TextButton.Font = Enum.Font.Gotham
-    
-    ImageLabel.Parent = Frame
-    ImageLabel.Image = LabelImage
-    ImageLabel.Size = UDim2.new(0, 75, 0, 75)
-    ImageLabel.Position = UDim2.new(0, 10, 0, 25)
-    ImageLabel.BackgroundTransparency = 1
-    
-    local ImageControls = {}
-    function ImageControls:SetImage(NewImage)
-        ImageLabel.Image = NewImage
-    end
-    
-    return ImageControls
-end
-
     function Elements:Discord(data)
     local DiscordFrame = Instance.new("Frame")
     DiscordFrame.Parent = Page
@@ -1424,8 +1378,58 @@ end
     Sep3.Position = UDim2.new(1, -80, 0, 10)
     Sep3.Size = UDim2.new(0, 80, 0, 1)
 end
-
-            
+            function Elements:ImageLabel(Configs)
+    local LabelName = Configs.Name or ""
+    local LabelImage = Configs.Image or "rbxassetid://0"
+    
+    local Frame = Instance.new("Frame")
+    Frame.Parent = Page
+    Frame.Size = UDim2.new(0, 95, 0, 110)
+    Frame.BackgroundColor3 = Color_Sec
+    Frame.Name = "Frame"
+    Frame.BorderSizePixel = 0
+    
+    local FrameCorner = Instance.new("UICorner")
+    FrameCorner.CornerRadius = UDim.new(0, 6)
+    FrameCorner.Parent = Frame
+    
+    local FrameStroke = Instance.new("UIStroke")
+    FrameStroke.Color = Color3.fromRGB(45, 45, 45)
+    FrameStroke.Thickness = 1
+    FrameStroke.Parent = Frame
+    
+    local TextButton = Instance.new("TextButton")
+    TextButton.Parent = Frame
+    TextButton.Size = UDim2.new(1, 0, 0, 25)
+    TextButton.Position = UDim2.new(0, 0, 1, -25)
+    TextButton.BackgroundTransparency = 1
+    TextButton.Font = Enum.Font.Gotham
+    TextButton.Text = LabelName
+    TextButton.TextColor3 = Color_Text
+    TextButton.TextSize = 12
+    TextButton.TextWrapped = true
+    
+    local ImageLabel = Instance.new("ImageLabel")
+    ImageLabel.Parent = Frame
+    ImageLabel.Size = UDim2.new(0, 75, 0, 75)
+    ImageLabel.Position = UDim2.new(0.5, -37.5, 0, 5)
+    ImageLabel.BackgroundTransparency = 1
+    ImageLabel.Image = LabelImage
+    ImageLabel.ScaleType = Enum.ScaleType.Fit
+    
+    return {
+        Image = ImageLabel,
+        SetImage = function(self, NewImage)
+            self.Image.Image = NewImage
+        end,
+        SetName = function(self, NewName)
+            TextButton.Text = NewName
+        end,
+        Destroy = function(self)
+            Frame:Destroy()
+        end
+    }
+end 
             function Elements:State(text)
                 local Lab = Instance.new("TextLabel")
                 local LabCorner = Instance.new("UICorner")
