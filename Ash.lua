@@ -1567,10 +1567,15 @@ end
     TitleLabel.TextSize = 13
     TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
     
+    -- إضافة مسافة داخلية (Padding) لترتيب العناصر تلقائياً
+    local UIPadding = Instance.new("UIPadding")
+    UIPadding.Parent = MainFrame
+    UIPadding.PaddingBottom = UDim.new(0, 12)
+    
     local TextLabel = Instance.new("TextLabel")
     TextLabel.Parent = MainFrame
     TextLabel.Size = UDim2.new(1, -16, 0, 0)
-    TextLabel.Position = UDim2.new(0, 8, 0, 30)
+    TextLabel.Position = UDim2.new(0, 8, 0, 34)
     TextLabel.BackgroundTransparency = 1
     TextLabel.Font = Enum.Font.Gotham
     TextLabel.Text = Text
@@ -1587,16 +1592,6 @@ end
     Line.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
     Line.BorderSizePixel = 0
     
-    local function updateSize()
-        MainFrame.Size = UDim2.new(1, 0, 0, TextLabel.AbsoluteSize.Y + 40)
-        Frame.Size = UDim2.new(1, 0, 0, MainFrame.AbsoluteSize.Y)
-    end
-    
-    TextLabel:GetPropertyChangedSignal("Text"):Connect(updateSize)
-    TextLabel:GetPropertyChangedSignal("Size"):Connect(updateSize)
-    task.wait(0.1)
-    updateSize()
-    
     return {
         Frame = Frame,
         SetText = function(self, newText)
@@ -1610,6 +1605,7 @@ end
         end
     }
 end
+
             function Elements:Keybind(Configs)
     local name = Configs.Title or "Keybind"
     local Default = Configs.Default or Enum.KeyCode.E
