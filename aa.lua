@@ -1125,7 +1125,6 @@ end
     local Options = Configs.Options or {}
     local DefaultSelected = Configs.Default or {}
     local Callback = Configs.Callback or function() end
-    local ShowSearch = Configs.SearchBox ~= false
 
     local Selected = {}
     for _, v in pairs(DefaultSelected) do Selected[v] = true end
@@ -1232,30 +1231,22 @@ end
         end
     end
 
-    if ShowSearch then
-        SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
-            local text = SearchBox.Text:lower()
-            for opt, btn in pairs(OptionButtons) do
-                if text == "" or opt:lower():find(text) then
-                    btn.Visible = true
-                else
-                    btn.Visible = false
-                end
+    SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
+        local text = SearchBox.Text:lower()
+        for opt, btn in pairs(OptionButtons) do
+            if text == "" or opt:lower():find(text) then
+                btn.Visible = true
+            else
+                btn.Visible = false
             end
-        end)
-    end
+        end
+    end)
 
     local open = false
     click.MouseButton1Click:Connect(function()
         open = not open
         if open then
-            if ShowSearch then
-                SearchBox.Visible = true
-                OptionContainer.Position = UDim2.new(0, 10, 0, 55)
-            else
-                SearchBox.Visible = false
-                OptionContainer.Position = UDim2.new(0, 10, 0, 30)
-            end
+            SearchBox.Visible = true
             OptionContainer.Visible = true
             TweenService:Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 155)}):Play()
             TweenService:Create(DropIcon, TweenInfo.new(0.2), {Rotation = 180}):Play()
@@ -1277,11 +1268,18 @@ end
             for k, v in pairs(Selected) do if v then table.insert(tbl, k) end end
             return tbl
         end,
-        SetOptions = function(newOptions)
-            Options = newOptions
+        Update = function(NewOptions, NewDefault)
+            Options = NewOptions or {}
             Selected = {}
-            for _, v in pairs(DefaultSelected) do Selected[v] = true end
+            if NewDefault then
+                for _, v in pairs(NewDefault) do Selected[v] = true end
+            end
+            SearchBox.Text = ""
             RefreshOptions()
+            
+            local tbl = {}
+            for k, v in pairs(Selected) do if v then table.insert(tbl, k) end end
+            pcall(Callback, tbl)
         end
     }
 end
