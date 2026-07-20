@@ -1125,6 +1125,7 @@ end
     local Options = Configs.Options or {}
     local DefaultSelected = Configs.Default or {}
     local Callback = Configs.Callback or function() end
+    local ShowSearch = Configs.SearchBox ~= false
 
     local Selected = {}
     for _, v in pairs(DefaultSelected) do Selected[v] = true end
@@ -1201,12 +1202,8 @@ end
 
     local OptionButtons = {}
 
-    local function RefreshOptions(newOptions)
-        if newOptions then Options = newOptions end
-        
-        for _, btn in pairs(OptionButtons) do 
-            pcall(function() btn:Destroy() end)
-        end
+    local function RefreshOptions()
+        for _, btn in pairs(OptionButtons) do btn:Destroy() end
         OptionButtons = {}
 
         for _, option in pairs(Options) do
@@ -1233,27 +1230,32 @@ end
 
             OptionButtons[option] = OptBtn
         end
-        
-        SearchBox.Text = ""
-        updateLayout()
     end
 
-    SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
-        local text = SearchBox.Text:lower()
-        for opt, btn in pairs(OptionButtons) do
-            if text == "" or opt:lower():find(text) then
-                btn.Visible = true
-            else
-                btn.Visible = false
+    if ShowSearch then
+        SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
+            local text = SearchBox.Text:lower()
+            for opt, btn in pairs(OptionButtons) do
+                if text == "" or opt:lower():find(text) then
+                    btn.Visible = true
+                else
+                    btn.Visible = false
+                end
             end
-        end
-    end)
+        end)
+    end
 
     local open = false
     click.MouseButton1Click:Connect(function()
         open = not open
         if open then
-            SearchBox.Visible = true
+            if ShowSearch then
+                SearchBox.Visible = true
+                OptionContainer.Position = UDim2.new(0, 10, 0, 55)
+            else
+                SearchBox.Visible = false
+                OptionContainer.Position = UDim2.new(0, 10, 0, 30)
+            end
             OptionContainer.Visible = true
             TweenService:Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, 155)}):Play()
             TweenService:Create(DropIcon, TweenInfo.new(0.2), {Rotation = 180}):Play()
@@ -1266,7 +1268,7 @@ end
         end
     end)
 
-    RefreshOptions(Options)
+    RefreshOptions()
     if Configs.Tooltip then Elements:Tooltip(Frame, Configs.Tooltip) end
 
     return {
@@ -1276,11 +1278,13 @@ end
             return tbl
         end,
         SetOptions = function(newOptions)
-            RefreshOptions(newOptions)
+            Options = newOptions
+            Selected = {}
+            for _, v in pairs(DefaultSelected) do Selected[v] = true end
+            RefreshOptions()
         end
     }
 end
-
 
 function Elements:Tooltip(TargetFrame, Text)
     local TooltipFrame = Instance.new("Frame")
