@@ -1267,10 +1267,22 @@ end
             local tbl = {}
             for k, v in pairs(Selected) do if v then table.insert(tbl, k) end end
             return tbl
+        end,
+        Update = function(NewOptions, NewDefault)
+            Options = NewOptions or {}
+            Selected = {}
+            if NewDefault then
+                for _, v in pairs(NewDefault) do Selected[v] = true end
+            end
+            SearchBox.Text = ""
+            RefreshOptions()
+            
+            local tbl = {}
+            for k, v in pairs(Selected) do if v then table.insert(tbl, k) end end
+            pcall(Callback, tbl)
         end
     }
 end
-
 
 function Elements:Tooltip(TargetFrame, Text)
     local TooltipFrame = Instance.new("Frame")
@@ -1567,7 +1579,6 @@ end
     TitleLabel.TextSize = 13
     TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
     
-    -- إضافة مسافة داخلية (Padding) لترتيب العناصر تلقائياً
     local UIPadding = Instance.new("UIPadding")
     UIPadding.Parent = MainFrame
     UIPadding.PaddingBottom = UDim.new(0, 12)
@@ -1606,7 +1617,7 @@ end
     }
 end
 
-            function Elements:Keybind(Configs)
+    function Elements:Keybind(Configs)
     local name = Configs.Title or "Keybind"
     local Default = Configs.Default or Enum.KeyCode.E
     local Callback = Configs.Callback or function() end
