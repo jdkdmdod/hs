@@ -1201,8 +1201,12 @@ end
 
     local OptionButtons = {}
 
-    local function RefreshOptions()
-        for _, btn in pairs(OptionButtons) do btn:Destroy() end
+    local function RefreshOptions(newOptions)
+        if newOptions then Options = newOptions end
+        
+        for _, btn in pairs(OptionButtons) do 
+            pcall(function() btn:Destroy() end)
+        end
         OptionButtons = {}
 
         for _, option in pairs(Options) do
@@ -1229,6 +1233,9 @@ end
 
             OptionButtons[option] = OptBtn
         end
+        
+        SearchBox.Text = ""
+        updateLayout()
     end
 
     SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
@@ -1259,7 +1266,7 @@ end
         end
     end)
 
-    RefreshOptions()
+    RefreshOptions(Options)
     if Configs.Tooltip then Elements:Tooltip(Frame, Configs.Tooltip) end
 
     return {
@@ -1267,6 +1274,9 @@ end
             local tbl = {}
             for k, v in pairs(Selected) do if v then table.insert(tbl, k) end end
             return tbl
+        end,
+        SetOptions = function(newOptions)
+            RefreshOptions(newOptions)
         end
     }
 end
