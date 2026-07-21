@@ -1125,6 +1125,8 @@ end
     local Options = Configs.Options or {}
     local DefaultSelected = Configs.Default or {}
     local Callback = Configs.Callback or function() end
+    local isMulti = Configs.Multi
+    if isMulti == nil then isMulti = true end
 
     local Selected = {}
     for _, v in pairs(DefaultSelected) do Selected[v] = true end
@@ -1201,6 +1203,13 @@ end
 
     local OptionButtons = {}
 
+    local function RefreshVisuals()
+        for opt, btn in pairs(OptionButtons) do
+            btn.BackgroundColor3 = Selected[opt] and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(35, 35, 35)
+            btn.TextColor3 = Selected[opt] and Color3.fromRGB(255, 0, 0) or Color_Text
+        end
+    end
+
     local function RefreshOptions()
         for _, btn in pairs(OptionButtons) do btn:Destroy() end
         OptionButtons = {}
@@ -1218,10 +1227,18 @@ end
             Instance.new("UICorner", OptBtn).CornerRadius = UDim.new(0, 4)
 
             OptBtn.MouseButton1Click:Connect(function()
-                Selected[option] = not Selected[option]
-                OptBtn.BackgroundColor3 = Selected[option] and Color3.fromRGB(50, 50, 50) or Color3.fromRGB(35, 35, 35)
-                OptBtn.TextColor3 = Selected[option] and Color3.fromRGB(255, 0, 0) or Color_Text
-                
+                if not isMulti then
+                    local isAlreadySelected = Selected[option]
+                    Selected = {}
+                    if not isAlreadySelected then
+                        Selected[option] = true
+                    end
+                else
+                    Selected[option] = not Selected[option]
+                end
+
+                RefreshVisuals()
+
                 local tbl = {}
                 for k, v in pairs(Selected) do if v then table.insert(tbl, k) end end
                 pcall(Callback, tbl)
