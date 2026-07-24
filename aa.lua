@@ -244,6 +244,14 @@ local Library = (function()
             KTitle.TextXAlignment = Enum.TextXAlignment.Left
             KTitle.BackgroundTransparency = 1
 
+            local KTitleGradient = Instance.new("UIGradient")
+            KTitleGradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0.0, Color3.fromRGB(255, 0, 0)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(128, 0, 0)),
+                ColorSequenceKeypoint.new(1.0, Color3.fromRGB(0, 0, 0))
+            })
+            KTitleGradient.Parent = KTitle
+
             Description.Parent = KeyMenu
             Description.Size = UDim2.new(1, -40, 0, 0)
             Description.Text = KeyDescription
