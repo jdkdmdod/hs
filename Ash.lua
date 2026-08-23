@@ -15,7 +15,7 @@ local Library = (function()
 
     local Lib = {}
 
-    local Color_Accent = Color3.fromRGB(255, 5, 5)
+    local Color_Accent = Color3.fromRGB(85, 0, 255)
     local Color_Main   = Color3.fromRGB(15, 15, 15)
     local Color_Sec    = Color3.fromRGB(25, 25, 25)
     local Color_Text   = Color3.fromRGB(255, 255, 255)
@@ -111,7 +111,7 @@ local Library = (function()
 
         local Cor_Stroke = Instance.new("Frame")
         Cor_Stroke.Size = UDim2.new(1, 0, 0, 2)
-        Cor_Stroke.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        Cor_Stroke.BackgroundColor3 = Color3.fromRGB(85, 0, 255)
         Cor_Stroke.Position = UDim2.new(0, 2, 0, 30)
         Cor_Stroke.BorderSizePixel = 0
         Cor_Stroke.Parent = Frame2
@@ -441,7 +441,7 @@ local Library = (function()
             end
         end)
 
-                local Top = Instance.new("Frame")
+        local Top = Instance.new("Frame")
         local Line = Instance.new("Frame")
         local GameTitle = Instance.new("TextLabel")
         local CloseBtn = Instance.new("TextButton")
@@ -1010,10 +1010,6 @@ end
                 TextBox.PlaceholderText = placeholder or "Enter text..."
                 TextBox.ClearTextOnFocus = false
 
-                BoxStroke.Parent = TextBox
-                BoxStroke.Thickness = 1
-                BoxStroke.Color = Color3.fromRGB(50, 50, 50)
-
                 TextBox.FocusLost:Connect(function(enterPressed)
                     pcall(callback, TextBox.Text)
                 end)
@@ -1376,6 +1372,7 @@ end
                 PText.TextWrapped = true
             end
         
+    
     function Elements:Label(text)
     local Seperator = Instance.new("Frame")
     local Sep1 = Instance.new("Frame")
@@ -1553,7 +1550,7 @@ end
                 
                 return Lab
             end
-            function Elements:Info(Configs)
+    function Elements:Info(Configs)
     local Title = Configs.Title or "Info"
     local Text = Configs.Text or ""
     
